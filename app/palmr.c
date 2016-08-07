@@ -1,23 +1,24 @@
-#include "PalmOS.h"
-#include "resource.h" // definition of HelloForm
+#include "PalmrRsc.h"
+#include <System/SystemPublic.h>
+#include <UI/UIPublic.h>
 
-static Boolean ApplicationEventHandelr(EventPtr event);
-static Boolean HelloFormEventHandler(EventPtr event);
+static Boolean PalmrFormEventHandler(EventPtr event);
+static Boolean MyOverallEventHandler(EventPtr event);
 
 UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags) {
   EventType event;
   UInt16 error;
 
   if (launchCode != sysAppLaunchCmdNormalLaunch) {
-    return 0
+    return 0;
   }
 
-  FrmGotoForm(HelloForm);
+  FrmGotoForm(PalmrForm);
 
   do {
     EvtGetEvent(&event, evtWaitForever);
 
-    if (!SysHandlEvent(&event)) {
+    if (!SysHandleEvent(&event)) {
       if (!MenuHandleEvent(0, &event, &error)) {
         if (!MyOverallEventHandler(&event)) {
           FrmDispatchEvent(&event);
@@ -36,35 +37,38 @@ static Boolean MyOverallEventHandler(EventPtr event) {
   case frmLoadEvent: {
     FormPtr pForm = FrmInitForm(event->data.frmLoad.formID);
     FrmSetActiveForm(pForm);
-    FrmSetEventHandler(pForm, HelloFormEventHandler);
+    FrmSetEventHandler(pForm, PalmrFormEventHandler);
     return true;
   }
   case menuEvent: {
-    switch (event->data.menu.itemID) {
-    case HelpMenuAbout: {
-      FrmAlert(AboutAlert);
-      break;
-    }
-      return true;
+    return true;
+  }
+  }
 
-    default: { return false; }
-    }
-  }
-  }
+  return false;
 }
 
-static Boolean HelloFormEventHandler(EventPtr event) {
+static Boolean PalmrFormEventHandler(EventPtr event) {
   static FormPtr gpForm;
 
   switch (event->eType) {
   case frmOpenEvent: {
     FrmDrawForm(gpForm = FrmGetActiveForm());
+
     return true;
   }
   case frmCloseEvent: {
     FrmEraseForm(gpForm);
     FrmDeleteForm(gpForm);
     return true;
+  }
+  case ctlSelectEvent: {
+    switch (event->data.ctlSelect.controlID) {
+    case HelpButton: {
+      FrmAlert(AboutAlert);
+      return true;
+    }
+    }
   }
   default: { return false; }
   }

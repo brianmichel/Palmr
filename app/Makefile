@@ -1,8 +1,10 @@
-C = m68k-palmos-gcc
-CFLAGS = -Wall -O2 -g -fno-builtin
-CSFLAGS = -S $(CFLAGS)
+XCC = m68k-palmos-gcc
+XCFLAGS = -O2 -Wall -g -fno-builtin
+XCSFLAGS = -S $(CFLAGS)
 
 PILRC = pilrc
+PILRCOPT = -q -ro
+
 TXT2BITM = txt2bitm
 OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
@@ -14,26 +16,27 @@ PILRCSRC = $(PROGNAME).rcp
 ICONBMP = $(PROGNAME).pbitm
 
 ICONTEXT = "Palmr"
-APPID = PLMR
+APPID = TBLR
 
 all: $(PROGNAME).prc
 
-.S.o:
-	$(CC) $(TARGETFLAGS) -c $<
-
-.c.s:
-	$(CC) $(CSFLAGS) $<
-
-$(PROGNAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -lm -lc -o $(PROGNAME)
-
-$(PROGNAME).prc: $(PROGNAME) $(PILRCSRC) $(ICONBMP) Makefile
-	$(OBJRES) $(PROGNAME)
-	$(PILRC) $(PILRCSRC)
-	$(TXT2BITM) $(ICONBMP)
-	cp bin/*.bin .
-	$(BUILDPRC) $(PROGNAME).prc $(ICONTEXT) $(APPID) code0001.$(PROGNAME).grc code0000.$(PROGNAME).grc data0000.$(PROGNAME).grc *.bin pref0000.$(PROGNAME).grc
-	$(RM) -f *.bin *.grc
-
 clean:
-	$(RM) -rf $(PROGNAME).prc $(PROGNAME) *.o *.a *.bin *.grc
+	rm -rf *.[oa] $(PROGNAME) *.ro *~
+
+distclean: clean
+	rm -rf $(PROGNAME).prc
+
+$(PROGNAME).prc: $(PROGNAME) $(PROGNAME).ro
+	$(BUILDPRC) $(PROGNAME).def -o $(PROGNAME).prc $(PROGNAME) $(PROGNAME).ro
+
+$(PROGNAME).ro: PalmrRsc.h
+	$(PILRC) $(PILRCOPT) $(PILRCSRC) $(PROGNAME)
+
+# Build the program executable from the
+# needed objects.
+$(PROGNAME): $(OBJS)
+	$(XCC) $(XCFLAGS) $(OBJS) -o $(PROGNAME)
+
+# Build the main app .o from the source files.
+$(PROGNAME).o: palmr.h palmr.c
+	$(XCC) $(XCFLAGS) -c palmr.c

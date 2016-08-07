@@ -7,10 +7,7 @@
 
 // Main Form
 #define PalmrForm 1000
-
-// main menu
-#define PalmrMainMenuBar 1000
-#define Info 1001
+#define PalmrMainMenuBar 1001
 
 // fields and buttons
 #define HelpButton 1010

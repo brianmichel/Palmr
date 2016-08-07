@@ -1,18 +1,12 @@
 #include "PalmrRsc.h"
 
-MENU ID PalmrMainMenuBar
-BEGIN
-  PULLDOWN "Options"
-  BEGIN
-    MENUITEM "About Palmr" ID Info "A"
-  END
-END
-
 FORM ID PalmrForm AT (0 0 160 160)
-MENUID 1000
+USABLE
+NOFRAME
+MENUID PalmrMainMenuBar
 BEGIN
   TITLE "Tumblr for Palm"
-  BUTTON "Acquiring Downloadables :)" HelpButton AT (0 15 160 160)
+  BUTTON "Acquiring Downloadables :)" HelpButton AT (5 20 150 135)
 END
 
 ALERT ID AboutAlert
