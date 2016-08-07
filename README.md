@@ -33,3 +33,8 @@ Since your machine doesn't have the required compilers and associated tools, we 
 ### Running
 1. Run `vagrant ssh -c "pose -psf [saved session file here] -load_apps /vagrant/app/palmr.prc"`
 ![](images/spin-up-session-med.gif)
+
+## Credits
+* [Rihards Kubilis' PalmOS Install](http://handheldbreadcrumbs.github.io/2016-06-17-install-palm-os-sdk/)
+* [Jim Weller' Palmdev FAQs](http://www.tldp.org/REF/palmdevqs/palmdevqs.pdf)
+* [@hpdevelopers](https://twitter.com/hpdevelopers)
