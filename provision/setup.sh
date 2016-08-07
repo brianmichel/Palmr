@@ -23,7 +23,7 @@ rm -rf /usr/local/palmdev && cd /opt && mv palmdev /usr/local/ && cd /usr/local/
 
 # Install Common Utilities Required Across Palm Development
 echo "Installing Palm PRC Tools..."
-apt-get install prc-tools
+alien -i -v ~/dev/palmdev/common/prc-tools-2.0.90-1.Linux-i386.rpm
 echo "Untarring PilRC Source Code & Compiling..."
 apt-get install pilrc
 
