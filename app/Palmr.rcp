@@ -24,3 +24,13 @@ BEGIN
   MESSAGE "^1"
   BUTTONS "OK"
 END
+
+MENU ID PalmrMainMenuBar
+BEGIN
+  PULLDOWN "File"
+  BEGIN
+    MENUITEM "Preferences"   PalmrMainMenuPreferences
+    MENUITEM "Help"		       PalmrMainMenuHelp
+    MENUITEM "About"	       PalmrMainMenuAbout
+  END
+END

@@ -4,7 +4,13 @@
 
 static Boolean PalmrFormEventHandler(EventPtr event);
 static Boolean MyOverallEventHandler(EventPtr event);
-
+/**
+ * Main entry point for all PalmOS application.
+ * @param  launchCode  Where did the launch come from?
+ * @param  cmdPBP      //TODO I don't know what this is
+ * @param  launchFlags //TODO I don't know what this i
+ * @return             0 once the application has halted
+ */
 UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags) {
   EventType event;
   UInt16 error;
@@ -65,6 +71,16 @@ static Boolean PalmrFormEventHandler(EventPtr event) {
   case ctlSelectEvent: {
     switch (event->data.ctlSelect.controlID) {
     case HelpButton: {
+      FrmCustomAlert(TheError,
+                     "Oops, looks like our connection goofed here, try again?",
+                     NULL, NULL);
+      return true;
+    }
+    }
+  }
+  case menuEvent: {
+    switch (event->data.menu.itemID) {
+    case PalmrMainMenuAbout: {
       FrmAlert(AboutAlert);
       return true;
     }

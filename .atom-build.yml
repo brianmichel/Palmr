@@ -1,0 +1,2 @@
+cmd: vagrant ssh -c "cd /vagrant/app && make clean && make all"
+name: "Clean & Build"

@@ -7,6 +7,9 @@
 *.ko
 *.obj
 *.elf
+*.prc
+*.ro
+palmer
 
 # Precompiled Headers
 *.gch
