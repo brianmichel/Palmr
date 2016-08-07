@@ -23,3 +23,13 @@ So the Palm emulator is a bit strange in that it doesn't come with any OS pre-in
 4. This will give you a crappy file viewer that can browse the local file system of the VM. You want to navigate to `/vagrant/ROMS` (`/vagrant` is actually where our repo gets mounted to the remote file system.)
 5. Select `Palm OS 3.5-en-color.rom` and click OK
 6. The other settings don't really matter, just hit OK on the new session screen, and watch your beautiful Palm device boot up.
+
+## Compiling & Running
+Since your machine doesn't have the required compilers and associated tools, we need to execute all build commands on the virtual machine, thankfully, Vagrant makes that pretty easy.
+
+### Compiling
+1. Run `vagrant ssh -c "cd /vagrant/app && make clean && make"`
+
+### Running
+1. Run `vagrant ssh -c "pose -psf [saved session file here] -load_apps /vagrant/app/palmr.prc"`
+![](images/spin-up-session-med.gif)
