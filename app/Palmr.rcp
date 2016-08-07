@@ -1,0 +1,32 @@
+#include "PalmrRsc.h"
+
+MENU ID PalmrMainMenuBar
+BEGIN
+  PULLDOWN "Options"
+  BEGIN
+    MENUITEM "About Palmr" ID Info "A"
+  END
+END
+
+FORM ID PalmrForm AT (0 0 160 160)
+MENUID 1000
+BEGIN
+  TITLE "Tumblr for Palm"
+  BUTTON "Acquiring Downloadables :)" HelpButton AT (0 15 160 160)
+END
+
+ALERT ID AboutAlert
+INFORMATION
+BEGIN
+  TITLE "About Palmr"
+  MESSAGE "A simple application for viewing the latest web downloadables from Tumblr.com"
+  BUTTONS "OK"
+END
+
+ALERT ID TheError
+INFORMATION
+BEGIN
+  TITLE "Error"
+  MESSAGE "^1"
+  BUTTONS "OK"
+END
