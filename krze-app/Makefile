@@ -1,19 +1,36 @@
-CC = m68k-palmos-gcc
-CFLAGS = -O2 -palmos3.5
+XCC = m68k-palmos-gcc
+XCFLAGS = -O2 -Wall -g -fno-builtin
+XCSFLAGS = -S $(CFLAGS)
 
-all: hello.prc
+PILRC = pilrc
+PILRCOPT = -q -ro
 
-hello.prc: hello bin.stamp
-	build-prc hello.prc "o shit!" TuHe hello *.bin
+TXT2BITM = txt2bitm
+OBJRES = m68k-palmos-obj-res
+BUILDPRC = build-prc
 
-hello: hello.o
-	$(CC) $(CFLAGS) -o hello hello.o
+PROGNAME = hello
+OBJS = $(PROGNAME).o
 
-hello.o: hello.c hello.h
-	$(CC) $(CFLAGS) -c hello.c
+PILRCSRC = $(PROGNAME).rcp
+ICONBMP = $(PROGNAME).pbitm
 
-bin.stamp: hello.rcp hello.h hello.bmp
-	pilrc hello.rcp
+ICONTEXT = "hello"
+APPID = HLLO
+
+all: $(PROGNAME).prc
+
+$(PROGNAME).prc: $(PROGNAME) bin.stamp
+	build-prc $(PROGNAME).prc "o shit!" TuHe $(PROGNAME) *.bin
+
+$(PROGNAME): $(PROGNAME).o
+	$(XCC) $(XCFLAGS) -o $(PROGNAME) $(PROGNAME).o
+
+$(PROGNAME).o: $(PROGNAME).c $(PROGNAME).h
+	$(XCC) $(XCFLAGS) -c $(PROGNAME).c
+
+bin.stamp: $(PROGNAME).rcp $(PROGNAME).h $(PROGNAME).bmp
+	pilrc $(PROGNAME).rcp
 
 clean:
-	-rm -f *.[oa] hello *.bin *.stamp
+	-rm -f *.[oa] $(PROGNAME) *.bin *.stamp
