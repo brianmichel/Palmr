@@ -4,6 +4,7 @@ A repo for setting up and building PalmOS applications.
 
 ## Setup
 You must have [XQuartz](https://www.xquartz.org) and [Vagrant](https://www.vagrantup.com) installed prior to continuing.
+> *Note:* You have to log out and back in to ensure the X11 forwarding will work on your mac.
 
 ### Build Environment
 1. From within the root of the repository, run `vagrant up`. This will setup *most* of the build environment for you!
