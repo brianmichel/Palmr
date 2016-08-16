@@ -10,7 +10,7 @@
 *.prc
 *.ro
 *.pdb
-palmer
+app/palmer
 
 # Precompiled Headers
 *.gch
