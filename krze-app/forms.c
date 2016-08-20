@@ -60,7 +60,7 @@ void UpdateTable()
 	UInt16		obj = FrmGetObjectIndex(frm, Table);
 	TablePtr	table = (TablePtr)FrmGetObjectPtr(frm, obj);
 	char		*strings[TableRows] = {"Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho"};
-	register	i;
+	register int	i;
 
 	for (i = 0; i < TableRows; i++)
 	{
@@ -137,7 +137,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 						goto _default;
 
 					case frmLoadEvent:
-					    FrmSetActiveForm(FrmInitForm(e.data.frmLoad.formId));
+					    FrmSetActiveForm(FrmInitForm(e.data.frmLoad.formID));
 						break;
 
 					case frmOpenEvent:
