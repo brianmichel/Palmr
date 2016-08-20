@@ -1,0 +1,132 @@
+/*****************************************************************************\
+*                                                                             *
+* Project       : Mobile development tutorial                                 *
+* Application   : Demonstration of database development                       *
+* Component     : Resources                                                   *
+* Author        : Eric Poncet (mobile.eric-poncet.com)                        *
+* Creation      : 07/10/2000                                                  *
+*                                                                             *
+*******************************************************************************
+*                                                                             *
+* History       :                                                             *
+*                                                                             *
+\*****************************************************************************/
+
+
+#include "db.h"
+
+FORM ID MainForm AT (0 0 160 160)
+USABLE
+MENUID MainMenu
+BEGIN
+	TITLE "Database"
+
+	BUTTON "\003" ID MainFirstRec   AT (CENTER@40  20 AUTO AUTO) FONT 3 NOFRAME
+	BUTTON "\002" ID MainPrevRec    AT (CENTER@60  PREVTOP AUTO AUTO) FONT 4 NOFRAME
+	FIELD         ID MainCursor     AT (CENTER@80  PREVTOP 20 AUTO) LEFTALIGN NONEDITABLE MAXCHARS 5
+	BUTTON "\003" ID MainNextRec    AT (CENTER@100 PREVTOP AUTO AUTO) FONT 4 NOFRAME
+	BUTTON "\004" ID MainLastRec    AT (CENTER@120 PREVTOP AUTO AUTO) FONT 3 NOFRAME
+	BUTTON "+"    ID MainInsert     AT (CENTER@140 PREVTOP AUTO AUTO)
+	
+	LABEL "Unique ID: " AUTOID AT (RIGHT@70 PREVBOTTOM+8) FONT 1
+	FIELD ID MainUniqueID AT (PREVRIGHT PREVTOP 50 AUTO) RIGHTALIGN DISABLED NONEDITABLE UNDERLINED MAXCHARS 10 NUMERIC 
+
+	LABEL "Name: " AUTOID AT (RIGHT@70 PREVBOTTOM+4) FONT 1
+	FIELD ID MainName AT (PREVRIGHT PREVTOP 80 AUTO) LEFTALIGN EDITABLE UNDERLINED MAXCHARS 20
+
+	LABEL "Quantity: " AUTOID AT (RIGHT@70 PREVBOTTOM+4) FONT 1
+	FIELD ID MainQuantity AT (PREVRIGHT PREVTOP 20 AUTO) RIGHTALIGN EDITABLE UNDERLINED MAXCHARS 4 NUMERIC 
+
+	LABEL "Attributes: " AUTOID AT (RIGHT@70 PREVBOTTOM+4) FONT 1
+	/* delete and dirty checkboxes */
+	LABEL "" AUTOID AT (RIGHT@70 PREVBOTTOM+1) FONT 1
+	/* busy and secret checkboxes */
+
+	/* 4 missing buttons */
+
+	LABEL "Data Bytes: " AUTOID AT (4 PREVBOTTOM+8)
+	/* field for data bytes */
+	LABEL "Total Bytes: " AUTOID AT (84 PREVTOP)
+	/* field for total bytes */
+END
+
+FORM ID InsertForm AT (5 40 150 80)
+FRAME MODAL USABLE
+BEGIN
+	TITLE "Insert Record"
+
+	LABEL "Name: " AUTOID AT (RIGHT@60 20) FONT 1
+	FIELD ID InsertName AT (PREVRIGHT PREVTOP 80 AUTO) LEFTALIGN EDITABLE UNDERLINED MAXCHARS 20
+
+	LABEL "Quantity: " AUTOID AT (RIGHT@60 PREVBOTTOM+4) FONT 1
+	FIELD ID InsertQuantity AT (PREVRIGHT PREVTOP 20 AUTO) RIGHTALIGN EDITABLE UNDERLINED MAXCHARS 4 NUMERIC 
+
+	BUTTON "OK" ID InsertOK AT (CENTER@50 PREVBOTTOM+8 AUTO AUTO)
+	BUTTON "Cancel" ID InsertCancel AT (CENTER@110 PREVTOP AUTO AUTO)
+END
+
+MENU ID MainMenu
+BEGIN
+    PULLDOWN "Edit"
+    BEGIN
+		MENUITEM "Clear"       	ID MainEditClearCmd		"L"
+      	MENUITEM SEPARATOR
+		MENUITEM "Cut"       	ID MainEditCutCmd		"X"
+		MENUITEM "Copy"       	ID MainEditCopyCmd		"C"
+		MENUITEM "Paste"   		ID MainEditPasteCmd		"V"
+    	MENUITEM SEPARATOR
+		MENUITEM "Select All"	ID MainEditSelectAllCmd	"S"
+    END
+
+    PULLDOWN "Options"
+    BEGIN
+		MENUITEM "Help" 		ID MainOptionsHelpCmd	"H"
+      	MENUITEM SEPARATOR
+		MENUITEM "About" 		ID MainOptionsAboutCmd	"A"
+    END
+END
+
+ALERT ID HelpAlert
+INFORMATION
+BEGIN
+  TITLE "Help"
+  MESSAGE "This app provides a database that you can browse using buttons and hard keys. You may add, update, delete, lock/unlock or hide/show ('Secret') records. "\
+  		  "Changes made to records ARE saved!\n"
+  BUTTON "OK"
+END
+
+ALERT ID AboutAlert
+INFORMATION
+BEGIN
+  TITLE "About Database"
+  MESSAGE "This is a demonstration of database programming for PalmOS.\n"\
+          "-----------\n" \
+		  "Eric Poncet\n"\
+		  "mobile.eric-poncet.com\n"\
+		  "Freeware"
+  BUTTON "OK"
+END
+
+ALERT ID RomIncompatibleAlert
+ERROR
+BEGIN
+  TITLE "System Incompatible"
+  MESSAGE "System Version 2.0 or greater is required to run this application."
+  BUTTONS "Ok"
+END
+
+ALERT ID ErrorAlert
+ERROR
+BEGIN
+  TITLE "Error!"
+  MESSAGE "^1\n^2\n^3"
+  BUTTONS "Ok"
+END
+
+ICON "db.bmp"
+
+SMALLICON "dbsmall.bmp"
+
+VERSION 1 "1.0.0"
+
+LAUNCHERCATEGORY ID 1000 "Tutorial"
