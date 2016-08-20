@@ -21,7 +21,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 {
 	short err;
 	EventType e;
-	FormType pfrm;
+	FormType *pfrm;
 
 	if (cmd == sysAppLaunchCmdNormalLaunch)			// Make sure only react to NormalLaunch, not Reset, Beam, Find, GoTo...
 	{
