@@ -1,19 +1,36 @@
-CC = m68k-palmos-gcc
-CFLAGS = -O2 -palmos3.5
+XCC = m68k-palmos-gcc
+XCFLAGS = -O2 -Wall -g -fno-builtin
+XCSFLAGS = -S $(CFLAGS)
 
-all: db.prc
+PILRC = pilrc
+PILRCOPT = -q -ro
 
-db.prc: db bin.stamp
-	build-prc db.prc "Database" TuDb db *.bin
+TXT2BITM = txt2bitm
+OBJRES = m68k-palmos-obj-res
+BUILDPRC = build-prc
 
-db: db.o
-	$(CC) $(CFLAGS) -o db db.o
+PROGNAME = db
+OBJS = $(PROGNAME).o
 
-db.o: db.c db.h
-	$(CC) $(CFLAGS) -c db.c
+PILRCSRC = $(PROGNAME).rcp
+ICONBMP = $(PROGNAME).pbitm
 
-bin.stamp: db.rcp db.h db.bmp
-	pilrc db.rcp
+ICONTEXT = "db"
+APPID = DB
+
+all: $(PROGNAME).prc
+
+$(PROGNAME).prc: $(PROGNAME) bin.stamp
+	build-prc $(PROGNAME).prc "db practice" TuHe $(PROGNAME) *.bin
+
+$(PROGNAME): $(PROGNAME).o
+	$(XCC) $(XCFLAGS) -o $(PROGNAME) $(PROGNAME).o
+
+$(PROGNAME).o: $(PROGNAME).c $(PROGNAME).h
+	$(XCC) $(XCFLAGS) -c $(PROGNAME).c
+
+bin.stamp: $(PROGNAME).rcp $(PROGNAME).h $(PROGNAME).bmp
+	pilrc $(PROGNAME).rcp
 
 clean:
-	-rm -f *.[oa] db *.bin *.stamp
+	-rm -f *.[oa] $(PROGNAME) *.bin *.stamp

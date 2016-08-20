@@ -13,7 +13,13 @@
 \*****************************************************************************/
 
 #define MainForm		1000
-/* some IDs here */
+#define MainUniqueID 1001
+#define MainName 1002
+#define MainQuantity 1003
+#define MainAttrDelete 1004
+#define MainAttrDirty 1005
+#define MainAttrBusy 1006
+#define MainAttrSecret 1007
 #define	MainUpdate		1010
 #define	MainDelete		1011
 #define	MainLock		1012
@@ -39,7 +45,7 @@
 #define	MainEditCopyCmd			1012
 #define	MainEditPasteCmd		1013
 #define	MainEditSelectAllCmd	1014
-#define	MainOptionsHelpCmd		1020         
+#define	MainOptionsHelpCmd		1020
 #define	MainOptionsAboutCmd		1021
 
 #define	HelpAlert				1000

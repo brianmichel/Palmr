@@ -20,10 +20,10 @@
 #include <UI/UIPublic.h>
 
 
-/* creator ID */
+#define CreatorID 'TuDb'
 #define ROM_VERSION_REQUIRED	0x02000000		// This application requires PalmOS 2.0 or later
-/* DB name */
-/* DB type */
+#define DBName "TutorialDatabaseDB"
+#define DBType 'DATA'
 
 typedef struct DBRecordType
 {
@@ -35,7 +35,7 @@ typedef DBRecordType*	DBRecordTypePtr;
 
 static DmOpenRef		db;
 static UInt16			dbCard;
-/* dbID */
+static LocalID		dbID;
 static Int16			nbRec = 0, curRec = 0;
 static DBRecordType		dbRecord;
 static UInt32			totalBytes, dataBytes;
@@ -47,7 +47,7 @@ static Char* GetField(UInt16 formID, UInt16 fieldID)
 	FieldPtr	fld;
 	UInt16		obj;
 	Char		*p;
-	
+
 	frm = FrmGetFormPtr(formID);
 	obj = FrmGetObjectIndex(frm, fieldID);
 	fld = (FieldPtr)FrmGetObjectPtr(frm, obj);
@@ -63,7 +63,7 @@ static FieldPtr SetField(UInt16 formID, UInt16 fieldID, MemPtr str)
 	FieldPtr	fld;
 	CharPtr		p;
 	VoidHand	h;
-	
+
 	frm = FrmGetFormPtr(formID);
 	obj = FrmGetObjectIndex(frm, fieldID);
 	fld = (FieldPtr)FrmGetObjectPtr(frm, obj);
@@ -73,11 +73,11 @@ static FieldPtr SetField(UInt16 formID, UInt16 fieldID, MemPtr str)
 		h = MemHandleNew (FldGetMaxChars(fld)+1);
 		ErrFatalDisplayIf(!h, "No Memory");
 	}
-	
+
 	p = (CharPtr)MemHandleLock(h);
 	StrCopy(p, str);
 	MemHandleUnlock(h);
-	
+
 	FldSetTextHandle(fld, (Handle)h);
 }
 
@@ -113,20 +113,20 @@ static FieldPtr GetFocusObjectPtr(void)
 	FormPtr frm;
 	UInt16 focus;
 	FormObjectKind objType;
-	
+
 	frm = FrmGetActiveForm();
 	focus = FrmGetFocus(frm);
 	if (focus == noFocus)
 		return(NULL);
-		
+
 	objType = FrmGetObjectType(frm, focus);
-	
+
 	if (objType == frmFieldObj)
 		return(FrmGetObjectPtr(frm, focus));
-	
+
 	else if (objType == frmTableObj)
 		return(TblGetCurrentField(FrmGetObjectPtr(frm, focus)));
-	
+
 	return (NULL);
 }
 
@@ -142,8 +142,8 @@ static void SelectRecord(UInt16 index)
 	DmDatabaseSize(dbCard, dbID, NULL, &totalBytes, &dataBytes);
 	SetField(MainForm, MainDataBytes, StrIToA(buf, dataBytes));
 	SetField(MainForm, MainTotalBytes, StrIToA(buf, totalBytes));
-	
-	if (/* query record */)
+
+	if (recH = (MemHandle)DmQueryRecord(db, index))
 	{
 		if (DmRecordInfo(db, index, &attr, &uniqueID, NULL))
 		{
@@ -154,12 +154,12 @@ static void SelectRecord(UInt16 index)
 		recP = (DBRecordTypePtr)MemHandleLock(recH);
 
 		StrPrintF(buf, "%4lx", uniqueID);
-		SetField(MainForm, MainUniqueID  , buf);		
-		SetField(MainForm, MainName      , recP->name);		
+		SetField(MainForm, MainUniqueID  , buf);
+		SetField(MainForm, MainName      , recP->name);
 		StrIToA(buf, recP->quantity);
 		SetField(MainForm, MainQuantity  , buf);
 
-		/* unlock handle */
+		MemHandleLock(recH);
 
 		SetControl(MainForm, MainAttrDelete, (attr & dmRecAttrDelete) ? 1 : 0);
 		SetControl(MainForm, MainAttrDirty , (attr & dmRecAttrDirty ) ? 1 : 0);
@@ -168,8 +168,8 @@ static void SelectRecord(UInt16 index)
 	}
 	else
 	{
-		SetField(MainForm, MainUniqueID  , "");		
-		SetField(MainForm, MainName      , "");		
+		SetField(MainForm, MainUniqueID  , "");
+		SetField(MainForm, MainName      , "");
 		SetField(MainForm, MainQuantity  , "");
 		SetControl(MainForm, MainAttrDelete, 0);
 		SetControl(MainForm, MainAttrDirty , 0);
@@ -181,7 +181,7 @@ static void SelectRecord(UInt16 index)
 	if (nbRec > 0)
 		StrPrintF(buf, "%2d/%-2d", curRec+1, nbRec);
 		else StrCopy(buf, "");
-	SetField(MainForm, MainCursor, buf);		
+	SetField(MainForm, MainCursor, buf);
 
 	FrmDrawForm(FrmGetFormPtr(MainForm));
 }
@@ -194,13 +194,13 @@ static void UpdateRecord()
 	MemPtr				recP;
 	UInt16				attr;
 	char				buf[20];
-	
+
 	if (DmRecordInfo(db, index, &attr, NULL, NULL))
 	{
 		FrmCustomAlert(ErrorAlert, "Unable to get record info", "", "");
 		return;
 	}
-	
+
 	if ((attr & dmRecAttrBusy) != 0)
 	{
 		FrmCustomAlert(ErrorAlert, "Record is locked", "", "");
@@ -220,9 +220,11 @@ static void UpdateRecord()
 
 		StrCopy(dbRecord.name, GetField(MainForm, MainName));
 		dbRecord.quantity = StrAToI(GetField(MainForm, MainQuantity));
-		
-		/* do the write to DB */
-			
+
+		recP = MemHandleLock(recH);
+		DmWrite(recP, 0, &dbRecord, sizeof(DBRecordType));
+		MemPtrUnlock(recP);
+
 		DmReleaseRecord(db, index, true);
 	}
 	else FrmCustomAlert(ErrorAlert, "Unable to get record", "", "");
@@ -233,15 +235,15 @@ static void DeleteRecord()
 {
 	UInt16		attr;
 	Err			error;
-	
+
 	if (DmRecordInfo(db, curRec, &attr, NULL, NULL))
 	{
 		FrmCustomAlert(ErrorAlert, "Unable to get record info", "", "");
 		return;
 	}
-	
+
 	if ((attr & dmRecAttrDelete) == 0)
-		if (/* do remove */)	// delete OK: we need to find a valid "current" rec, forwards OR backwards
+		if ((error = DmRemoveRecord(db,curRec)) == 0)	// delete OK: we need to find a valid "current" rec, forwards OR backwards
 			{
 				UInt16	seek = curRec;
 				while (seek < nbRec)						// fast forward :)
@@ -255,7 +257,7 @@ static void DeleteRecord()
 						if (DmQueryRecord(db, seek) != NULL)
 							break;							// found one!
 				}
-				
+
 				curRec = seek;								// got the new "current"
 				nbRec--;									// decrement rec count
 				SelectRecord(curRec);
@@ -269,13 +271,13 @@ static void LockRecord()
 {
 	UInt16		attr;
 	MemHandle	recH;
-	
+
 	if (DmRecordInfo(db, curRec, &attr, NULL, NULL))
 	{
 		FrmCustomAlert(ErrorAlert, "Unable to get record info", "", "");
 		return;
 	}
-	
+
 	if ((attr & dmRecAttrBusy) == 0)
 		if (recH = (MemHandle)DmGetRecord(db, curRec))
 			SelectRecord(curRec);
@@ -287,13 +289,13 @@ static void LockRecord()
 static void UnlockRecord()
 {
 	UInt16		attr;
-	
+
 	if (DmRecordInfo(db, curRec, &attr, NULL, NULL))
 	{
 		FrmCustomAlert(ErrorAlert, "Unable to get record info", "", "");
 		return;
 	}
-	
+
 	if ((attr & dmRecAttrBusy) != 0)
 		if (DmReleaseRecord(db, curRec, true) == errNone)
 			SelectRecord(curRec);
@@ -310,17 +312,21 @@ static void InsertRecord()
 
 	// Add a new record at the end of the database.
 	index = DmNumRecords(db);
-	/* new record */
-	
+	if (!(recH = DmNewRecord(db, &index, sizeof(DBRecordType))))
+	{
+		FrmCustomAlert(ErrorAlert, "Unable to create record", "", "");
+		return;
+	}
+
 	StrCopy(dbRecord.name, GetField(InsertForm, InsertName));
 	dbRecord.quantity = StrAToI(GetField(InsertForm, InsertQuantity));
-	
+
 	recP = MemHandleLock(recH);
-	DmWrite(recP, 0, &dbRecord, sizeof(DBRecordType)); 
+	DmWrite(recP, 0, &dbRecord, sizeof(DBRecordType));
 	MemPtrUnlock(recP);
 
 	DmReleaseRecord(db, index, true);
-	
+
 	curRec = index;
 	nbRec++;
 }
@@ -337,7 +343,7 @@ static Boolean MainFormHandleEvent(EventPtr event)
 			SelectRecord(curRec);
 			handled = true;
 			break;
-	
+
 	    case menuEvent:
 			MenuEraseStatus(NULL);
 			switch (event->data.menu.itemID)
@@ -376,17 +382,17 @@ static Boolean MainFormHandleEvent(EventPtr event)
 				    (void)FrmAlert(HelpAlert);
 				    handled = true;
 				    break;
-				    
+
 				case MainOptionsAboutCmd:
 				    (void)FrmAlert(AboutAlert);
 				    handled = true;
 				    break;
-				    
+
 				default:
 					break;
 			}
 			break;
-	
+
 	    case ctlSelectEvent:
 			switch (event->data.ctlSelect.controlID)
 			{
@@ -441,7 +447,7 @@ DoUnlock:
 				    break;
 
 				case MainInsert:
-					/* display insert form */
+					FrmPopupForm(InsertForm);
 				    handled = true;
 				    break;
 
@@ -449,22 +455,22 @@ DoUnlock:
 					break;
 			}
 			break;
-	
+
 	    case keyDownEvent:
 			switch (event->data.keyDown.chr)
 			{
 				case vchrHard1:
 					goto DoUpdate;
-					
+
 				case vchrHard2:
 					goto DoDelete;
-					
+
 				case vchrHard3:
 					goto DoLock;
-					
+
 				case vchrHard4:
 					goto DoUnlock;
-					
+
 				case vchrPageDown:
 					if (curRec > 0)
 						SelectRecord(--curRec);
@@ -481,19 +487,19 @@ DoUnlock:
 					break;
 			}
 			break;
-	
+
 	    case penDownEvent:
 			break;
-	
+
 	    case penUpEvent:
 			break;
-	
+
 	    case frmCloseEvent:
 			break;
-	
+
 	    case nilEvent:
 			break;
-	
+
 	    default:
 			break;
     }
@@ -513,7 +519,7 @@ static Boolean InsertFormHandleEvent(EventPtr event)
 			FrmDrawForm(FrmGetFormPtr(InsertForm));
 			handled = true;
 			break;
-	
+
 	    case ctlSelectEvent:
 			switch (event->data.ctlSelect.controlID)
 			{
@@ -537,7 +543,7 @@ static Boolean InsertFormHandleEvent(EventPtr event)
 					break;
 			}
 			break;
-	
+
 	    default:
 			break;
     }
@@ -565,12 +571,12 @@ static Boolean AppHandleEvent(EventPtr event)
 				FrmSetEventHandler(frm, MainFormHandleEvent);
 				handled = true;
 				break;
-				
+
 			case InsertForm:
 				FrmSetEventHandler(frm, InsertFormHandleEvent);
 				handled = true;
 				break;
-				
+
 			default:
 				break;
 		}
@@ -586,16 +592,20 @@ static Err AppStart()
 	UInt32	locks;
 	Err		retcode = 0;
 
-	// Find the application's data file.  If it doesn't exist create it.
-	/* open db by type creator */
+	if (db = DmOpenDatabaseByTypeCreator(DBType, CreatorID, dmModeReadWrite | dmModeShowSecret))
+		DmOpenDatabaseInfo(db, &dbID, NULL, NULL, &dbCard, NULL);
 		else
 		{
-			/* create DB */			
+			if (retcode = DmCreateDatabase(0, DBName, CreatorID, DBType, false))
+				return retcode;
 
 			if (!(db = DmOpenDatabaseByTypeCreator(DBType, CreatorID, dmModeReadWrite | dmModeShowSecret)))
 				return dmErrCantOpen;
-	
-			// Set the backup bit.  This is to aid syncs with non Palm software.
+
+			DmOpenDatabaseInfo(db, &dbID, NULL, NULL, &dbCard, NULL);
+			DmDatabaseInfo(dbCard, dbID, NULL, &attributes, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+			attributes |= dmHdrAttrBackup;
+			DmSetDatabaseInfo(dbCard, dbID, NULL, &attributes, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		}
 
     DmGetDatabaseLockState(db, NULL, NULL, &locks);
@@ -604,7 +614,7 @@ static Err AppStart()
 	nbRec = DmNumRecords(db);
 
 	FrmGotoForm(MainForm);
-	
+
 	return retcode;
 }
 
@@ -629,7 +639,7 @@ static void AppEventLoop(void)
 
 		if (SysHandleEvent(&event))
 			continue;
-			
+
 		if (MenuHandleEvent((void *)0, &event, &error))
 			continue;
 
@@ -648,21 +658,21 @@ static Err AppStop()
 	UInt32	locks;
 	Boolean	protect = false;
 	Err		retcode;
-	
+
     FrmCloseAllForms();
-    
+
     DmGetDatabaseLockState(db, NULL, NULL, &locks);
     if (protect = (locks > 0))								// any record locked?
     {
     	char	buf[40];
-    	
+
     	StrPrintF(buf, "%ld record(s) still locked.", locks);
     	FrmCustomAlert(ErrorAlert, buf, "Database will be closed protected.", "If you don't unlock every record, you WON'T be allowed to delete the database.");
     }
     DmDatabaseProtect(dbCard, dbID, protect);				// protect/unprotect DB accordingly
-    
-	/* close DB */
-	
+
+		DmCloseDatabase(db);
+
     return retcode;
 }
 
@@ -672,7 +682,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	UInt32 romVersion;
 
 	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);	// Minimal ROM version requirement
-	if (romVersion < ROM_VERSION_REQUIRED)					
+	if (romVersion < ROM_VERSION_REQUIRED)
 	{
 		FrmAlert(RomIncompatibleAlert);
 		return(sysErrRomIncompatible);
@@ -681,7 +691,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	if (cmd == sysAppLaunchCmdNormalLaunch)						// Normal launch
 	{
 		Err retcode;
-		
+
 		if ((retcode = AppStart()) != 0)
 			return(retcode);
 		AppEventLoop();
