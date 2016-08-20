@@ -13,13 +13,13 @@
 \*****************************************************************************/
 
 
-/* include the .h */
+#include "forms.h"
 #include <PalmTypes.h>
 #include <PalmCompatibility.h>
 #include <System/SystemPublic.h>
 #include <UI/UIPublic.h>
 
-
+#define MIN_COUNT 0
 #define	MAX_COUNT	9999
 
 int	cnt = 1000;
@@ -31,10 +31,26 @@ void UpdateCount(UInt16 val)
 	UInt16		obj;
 	CharPtr		p;
 	VoidHand	h;
-	
+
 	cnt += val;
 
-	/* display counter */
+	frm = FrmGetActiveForm();
+	obj = FrmGetObjectIndex(frm, Form3Count);
+	fld = (FieldPtr)FrmGetObjectPtr(FrmGetActiveForm(), obj);
+	h = (VoidHand)FldGetTextHandle(fld);
+
+	if (h == NULL)
+	{
+		h = MemHandleNew(FldGetMaxChars(fld)+10);
+		ErrFatalDisplayIf(!h, "No Memory");
+	}
+
+	p = (CharPtr)MemHandleLock(h);
+	StrIToA(p, cnt);
+	MemHandleUnlock(h);
+
+	FldSetTextHandle(fld, (Handle)h);
+	FldDrawField(fld);
 }
 
 
@@ -52,9 +68,9 @@ void UpdateTable()
 		TblSetItemStyle (table, i, 1, labelTableItem);
 		TblSetItemInt(table, i, 0, i+1);
 		TblSetItemPtr(table, i, 1, strings[i]);
-		/* TblSetRowUsable */
-//OS3.5:		TblSetRowMasked(table, i, ((i%2) == 0) ? true : false);
-//		TblSetRowSelectable(table, i, ((i%2) == 0) ? false : true);
+		TblSetRowUsable(table, i, true);
+// OS3.5:		TblSetRowMasked(table, i, ((i%2) == 0) ? true : false);
+		// TblSetRowSelectable(table, i, ((i%2) == 0) ? false : true);
 		TblMarkRowInvalid(table, i);
 	}
 
@@ -79,46 +95,54 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	if (cmd == sysAppLaunchCmdNormalLaunch)			// Make sure only react to NormalLaunch, not Reset, Beam, Find, GoTo...
 	{
 		FrmGotoForm(f);
-		while(1) 
+		while(1)
 		{
 			EvtGetEvent(&e, 100);
-			if (SysHandleEvent(&e)) 
+			if (SysHandleEvent(&e))
 				continue;
-			if (MenuHandleEvent((void *)0, &e, &err)) 
+			if (MenuHandleEvent((void *)0, &e, &err))
 				continue;
-	
-			switch (e.eType) 
+
+			switch (e.eType)
 			{
 					case ctlSelectEvent:
 						if (e.data.ctlSelect.controlID == Prev)
 						{
-							if (f > FormFirst) 
+							if (f > FormFirst)
 								FrmGotoForm(--f);
 						}
 						else
-						/* handle Next */
+						if (e.data.ctlSelect.controlID == Next)
+						{
+							if (f < FormLast)
+								FrmGotoForm(++f);
+						}
 						else
 						if (e.data.ctlSelect.controlID == Exit)
 							goto _quit;
 						goto _default;
-						
+
 					case ctlRepeatEvent:
 						if (e.data.ctlRepeat.controlID == Form3Minus)
 						{
-							if (cnt > 0)
+							if (cnt > MIN_COUNT)
 								UpdateCount(-1);
 						}
 						else
-						/* handle "+" button */
+						if (e.data.ctlRepeat.controlID == Form3Plus)
+						{
+							if (cnt < MAX_COUNT)
+								UpdateCount(+1);
+						}
 						goto _default;
-				
+
 					case frmLoadEvent:
-					    /* set active form */
+					    FrmSetActiveForm(FrmInitForm(e.data.frmLoad.formId));
 						break;
-			
+
 					case frmOpenEvent:
 						pfrm = FrmGetActiveForm();
-						/* draw the form */
+						FrmDrawForm(pfrm);
 						if (e.data.frmLoad.formID == Form3)
 							UpdateCount(0);
 							else
@@ -126,22 +150,22 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 							UpdateTable();
 
 						break;
-		
+
 					case menuEvent:
 						break;
-		
+
 					case appStopEvent:
 						goto _quit;
-		
+
 					default:
 _default:
 						if (FrmGetActiveForm())
 							FrmHandleEvent(FrmGetActiveForm(), &e);
 			}
 		}
-		
+
 _quit:
-    	/* close them open formz :) */
+    	FrmCloseAllForms();
 	}
 
 	return 0;

@@ -10,7 +10,8 @@
 #define	Form3Plus	2046
 
 #define Prev	 	9000
-/* Add 2 button IDs */
+#define Next    9001
+#define Exit    9002
 
 #define Table		1000
 #define	TableCols	2
