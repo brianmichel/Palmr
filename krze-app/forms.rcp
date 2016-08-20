@@ -1,0 +1,126 @@
+/*****************************************************************************\
+*                                                                             *
+* Project       : Mobile development tutorial                                 *
+* Application   : Demonstration of forms development                          *
+* Component     : Resources                                                   *
+* Author        : Eric Poncet (mobile.eric-poncet.com)                        *
+* Creation      : 06/24/2000                                                  *
+*                                                                             *
+*******************************************************************************
+*                                                                             *
+* History       :                                                             *
+*                                                                             *
+\*****************************************************************************/
+
+
+#include "forms.h"
+
+FORM ID Form1 AT (2 2 156 156)
+USABLE
+MODAL
+HELPID Help1
+BEGIN
+	TITLE "??"
+
+	LABEL "This is a label" ID 2000 AT (/* position */) FONT 1
+
+	LABEL "Those are individual buttons" ID 2000 AT (CENTER PREVBOTTOM+10) FONT 1
+	BUTTON "Frame" ID 2001 AT (CENTER PREVBOTTOM+10 AUTO AUTO) FRAME
+	BUTTON "NoFrame" ID 2002 AT (CENTER PREVBOTTOM+4 AUTO AUTO) NOFRAME
+	BUTTON "BoldFrame" ID 2003 AT (CENTER PREVBOTTOM+4 AUTO AUTO) BOLDFRAME
+	BUTTON "Disabled" ID 2004 AT (CENTER PREVBOTTOM+4 100 AUTO) DISABLED	
+		
+	BUTTON "Next" ID Next AT (/* position */ /* size */)
+	/* Exit button */
+END
+
+FORM ID Form2 AT (2 2 156 156)
+USABLE
+MODAL
+HELPID Help1
+BEGIN
+	TITLE "Forms 2/4 (Modal)"
+
+	LABEL "Those are GROUPED buttons" ID 2010 AT (CENTER 20) FONT 1
+	PUSHBUTTON "1st" ID 2011 AT (CENTER@40 PREVBOTTOM+2 AUTO AUTO) GROUP 1
+	/* another one */
+	PUSHBUTTON "3rd" ID 2013 AT (CENTER@120 PREVTOP AUTO AUTO) GROUP 1
+
+	LABEL "Now single checkboxes..." ID 2020 AT (CENTER PREVBOTTOM+8) FONT 1
+	/* 1st checkbox here */
+	CHECKBOX "Checked" ID 2022 AT (CENTER@110 PREVTOP AUTO AUTO) CHECKED
+	CHECKBOX "Disabled" ID 2023 AT (CENTER PREVBOTTOM+2 AUTO AUTO) DISABLED
+
+	LABEL "... And grouped ones" ID 2030 AT (CENTER PREVBOTTOM+8) FONT 1
+	CHECKBOX "1st" ID 2031 AT (CENTER@40 PREVBOTTOM+2 AUTO AUTO) GROUP 1
+	CHECKBOX "2nd" ID 2032 AT (CENTER@80 PREVTOP AUTO AUTO) GROUP 1
+	CHECKBOX "3rd" ID 2033 AT (CENTER@120 PREVTOP AUTO AUTO) GROUP 1
+		
+	BUTTON "Prev" ID Prev AT (CENTER@40 PREVBOTTOM+10 AUTO AUTO)
+	BUTTON "Next" ID Next AT (CENTER@80 PREVTOP AUTO AUTO)
+	BUTTON "Exit" ID Exit AT (CENTER@120 PREVTOP AUTO AUTO)
+END
+
+FORM ID Form3 AT (2 2 156 156)
+USABLE
+HELPID Help1
+BEGIN
+	TITLE "Forms 3/4 (Non Modal)"
+
+	LABEL "Lists" AUTOID AT (CENTER 20) FONT 1
+	/* popup trigger */
+	/* popup list */
+	/* link trigger with list */
+	
+	/* add a list */
+		
+	LABEL "Repeat button & field" AUTOID AT (CENTER PREVBOTTOM+8) FONT 1
+	/* repeat button */ 
+	/* field */
+	REPEATBUTTON "+" ID Form3Plus AT (CENTER@110 PREVTOP AUTO AUTO) 
+		
+	LABEL "Bitmap" AUTOID AT (CENTER PREVBOTTOM+8) FONT 1
+	/* formbitmap */
+	
+	BUTTON "Prev" ID Prev AT (CENTER@40 PREVBOTTOM+16 AUTO AUTO)
+	BUTTON "Next" ID Next AT (CENTER@80 PREVTOP AUTO AUTO)
+	BUTTON "Exit" ID Exit AT (CENTER@120 PREVTOP AUTO AUTO)
+END
+
+
+FORM ID Form4 AT (2 2 156 156)
+USABLE
+HELPID Help1
+BEGIN
+	TITLE "Forms 4/4 (Non Modal)"
+
+	LABEL "Here's a table!" AUTOID AT (CENTER 20) FONT 1
+	/* table */
+
+	BUTTON "Prev" ID Prev AT (CENTER@50 PREVBOTTOM+10 AUTO AUTO)
+	BUTTON "Exit" ID Exit AT (CENTER@120 PREVTOP AUTO AUTO)
+END
+
+BITMAP ID Bitmap "forms.bmp"
+
+STRING Help1 "This is a demonstration of forms programming for PalmOS.\n"\
+    "-----------\n" \
+	"Eric Poncet\n"\
+	"mobile.eric-poncet.com\n"\
+	"Freeware"
+
+ALERT ID Alert1
+INFORMATION
+BEGIN
+  TITLE "About Forms"
+  /* message */
+  BUTTON "OK"
+END
+
+ICON "forms.bmp"
+
+SMALLICON "formssmall.bmp"
+
+VERSION 1 "1.0.0"
+
+LAUNCHERCATEGORY ID 1000 "Tutorial"
