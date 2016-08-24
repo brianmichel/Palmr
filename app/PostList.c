@@ -1,12 +1,12 @@
 #include "PostList.h"
+#include "PalmrDB.h"
 
 // static Boolean PostListTableHandler(EventPtr event);
 
 void UpdatePostsTable(FormPtr pForm)
 {
-  FormPtr		frm = FrmGetFormPtr(pForm);
-  UInt16		obj = FrmGetObjectIndex(frm, PostListTable);
-  TablePtr	table = (TablePtr)FrmGetObjectPtr(frm, obj);
+  UInt16		obj = FrmGetObjectIndex(pForm, PostListTable);
+  TablePtr	table = (TablePtr)FrmGetObjectPtr(pForm, obj);
   char		*strings[PostListRows] = {"Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Fuck", "Piss"};
   register	i;
 
@@ -30,4 +30,41 @@ void UpdatePostsTable(FormPtr pForm)
   //	TblRedrawTable(table);
   //	FrmUpdateForm (Table, 0);
   TblRedrawTable(table);
+}
+
+Boolean PostListFormEventHandler(EventPtr event)
+{
+    static FormPtr gpForm;
+
+    switch (event->eType) {
+    case frmOpenEvent: {
+        setup_database();
+        FrmDrawForm(gpForm = FrmGetActiveForm());
+        UpdatePostsTable(gpForm);
+
+        return true;
+    }
+    case frmCloseEvent: {
+        FrmEraseForm(gpForm);
+        FrmDeleteForm(gpForm);
+        return true;
+    }
+    case ctlSelectEvent: {
+        switch (event->data.ctlSelect.controlID) {
+        case HelpButton: {
+            FrmCustomAlert(TheError,
+                "Oops, looks like our connection goofed here, try again?",
+                NULL, NULL);
+            return true;
+        }
+        case PalmrMainMenuAbout: {
+            FrmAlert(AboutAlert);
+            return true;
+        }
+        }
+    }
+    default: {
+        return false;
+    }
+    }
 }

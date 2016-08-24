@@ -10,7 +10,7 @@ OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
 
 PROGNAME = palmr
-OBJS = palmr.o PalmrDB.o
+OBJS = palmr.o PalmrDB.o PostList.o
 
 PILRCSRC = $(PROGNAME).rcp
 ICONBMP = $(PROGNAME).pbitm
