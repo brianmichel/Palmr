@@ -8,7 +8,7 @@
 static Err get_database_attributes(LocalID databaseID, UInt16* attributes);
 static Err set_database_attributes(LocalID databaseID, UInt16* attributes);
 
-Boolean initialize_database_reference(PalmrDBRef database)
+Boolean initialize_database_reference(DmOpenRef* database)
 {
     Err error;
     DmOpenRef db;
@@ -23,6 +23,7 @@ Boolean initialize_database_reference(PalmrDBRef database)
     if (!db) {
         error = DmCreateDatabase(0, "Palmr", PalmrDBCreator, PalmrDBType, false);
         if (error) {
+            printf("Unable to create database for Palmr application! %i\n", error);
             return false;
         }
 
@@ -31,23 +32,25 @@ Boolean initialize_database_reference(PalmrDBRef database)
 
     error = DmOpenDatabaseInfo(db, &databaseID, NULL, NULL, &cardNumber, NULL);
     if (error) {
+        printf("Unable to get database information from Palmr DB!\n");
         DmCloseDatabase(db);
         return false;
     }
 
     if (get_database_attributes(databaseID, &databaseAttributes) != NULL) {
+        printf("Unable to get database attributes from Palmr DB!\n");
         DmCloseDatabase(db);
         return false;
     }
 
     databaseAttributesWithBackup = databaseAttributes | dmHdrAttrBackup;
     if (set_database_attributes(databaseID, &databaseAttributesWithBackup) != NULL) {
+        printf("Unable to set database attributes from Palmr DB!\n");
         DmCloseDatabase(db);
         return false;
     }
 
-    database->databaseReference = db;
-    database->opened = true;
+    *database = db;
 
     return true;
 }
@@ -92,16 +95,16 @@ static Err set_database_attributes(LocalID databaseID, UInt16* attributes)
     return error;
 }
 
-UInt16 number_of_references(PalmrDBRef database)
+UInt16 number_of_references(DmOpenRef* database)
 {
-    return DmNumRecords(database->databaseReference);
+    return DmNumRecords(*database);
 }
 
-Boolean destroy_database_reference(PalmrDBRef database)
+Boolean destroy_database_reference(DmOpenRef* database)
 {
-    if (database && database->opened) {
+    if (database) {
         Err error;
-        error = DmCloseDatabase(database->databaseReference);
+        error = DmCloseDatabase(*database);
         if (error) {
             return false;
         }

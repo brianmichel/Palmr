@@ -1,9 +1,11 @@
 #include "palmr.h"
 
-static PalmrDBRef database;
+static DmOpenRef PalmrDatabase;
 
 static Boolean PalmrFormEventHandler(EventPtr event);
 static Boolean MyOverallEventHandler(EventPtr event);
+
+Boolean setup_database(void);
 /**
  * Main entry point for all PalmOS application.
  * @param  launchCode  Where did the launch come from?
@@ -24,8 +26,6 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
     FrmGotoForm(PalmrForm);
 
-    setup_database();
-
     do {
         EvtGetEvent(&event, evtWaitForever);
 
@@ -40,9 +40,9 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
     FrmCloseAllForms();
 
-    if (database != NULL) {
-        free(database);
-        database = NULL;
+    if (PalmrDatabase != NULL) {
+        free(PalmrDatabase);
+        PalmrDatabase = NULL;
     }
 
     return 0;
@@ -86,13 +86,11 @@ static Boolean PalmrFormEventHandler(EventPtr event)
             FrmCustomAlert(TheError,
                 "Oops, looks like our connection goofed here, try again?",
                 NULL, NULL);
+            setup_database();
             return true;
         }
-        }
-    }
-    case menuEvent: {
-        switch (event->data.menu.itemID) {
         case PalmrMainMenuAbout: {
+            setup_database();
             FrmAlert(AboutAlert);
             return true;
         }
@@ -106,9 +104,11 @@ static Boolean PalmrFormEventHandler(EventPtr event)
 
 Boolean setup_database(void)
 {
-    if (database == NULL) {
-        database = malloc(sizeof(PalmrDB));
-        if (!initialize_database_reference(database)) {
+    if (PalmrDatabase == NULL) {
+        if (!initialize_database_reference(&PalmrDatabase)) {
+            FrmCustomAlert(TheError,
+                "Unable to setup the database :(",
+                NULL, NULL);
             return false;
         }
     }

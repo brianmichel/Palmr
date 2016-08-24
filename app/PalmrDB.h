@@ -3,16 +3,9 @@
 
 #include <System/SystemPublic.h>
 
-typedef struct {
-    DmOpenRef databaseReference;
-    Boolean opened;
-} PalmrDB;
+Boolean initialize_database_reference(DmOpenRef* database);
+Boolean destroy_database_reference(DmOpenRef* database);
 
-typedef PalmrDB* PalmrDBRef;
-
-Boolean initialize_database_reference(PalmrDBRef database);
-Boolean destroy_database_reference(PalmrDBRef database);
-
-UInt16 number_of_references(PalmrDBRef database);
+UInt16 number_of_references(DmOpenRef* database);
 
 #endif
