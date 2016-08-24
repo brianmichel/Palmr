@@ -1,4 +1,5 @@
 #include "palmr.h"
+#include "PostList.h"
 
 static PalmrDBRef database;
 
@@ -72,6 +73,7 @@ static Boolean PalmrFormEventHandler(EventPtr event)
     switch (event->eType) {
     case frmOpenEvent: {
         FrmDrawForm(gpForm = FrmGetActiveForm());
+        UpdatePostsTable(gpForm);
 
         return true;
     }

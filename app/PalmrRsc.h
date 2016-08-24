@@ -7,7 +7,6 @@
 
 // Main Form
 #define PalmrForm 1000
-#define PostListForm 4000
 
 // fields and buttons
 #define HelpButton 1010
@@ -21,6 +20,7 @@
 #define PalmrMainMenuHelp 1011
 #define PalmrMainMenuAbout 1012
 
+#define PostListForm 4000
 #define PostListTable 4001
 #define PostListColumns 3
 #define PostListRows 10
