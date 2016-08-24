@@ -49,5 +49,5 @@ NOFRAME
 MENUID PalmrMainMenuBar
 BEGIN
   TITLE "It's your posts!"
-  TABLE PostListTable AT (0 0 160 160) ROWS PostListRows COLUMNS PostListColumns COLUMNWIDTHS 10 30 120
+  TABLE PostListTable AT (0 15 160 140) ROWS PostListRows COLUMNS PostListColumns COLUMNWIDTHS 10 30 120
 END
