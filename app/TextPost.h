@@ -7,7 +7,12 @@ static const int TextPostAuthorMax = 80;
 static const int TextPostBodyMax = 100;
 
 typedef struct TextPost {
-
+    PostType type;
+    char* author;
+    char* body;
 } TextPost;
+
+Boolean initialize_text_post(TextPost* textPost);
+Boolean destroy_text_post(TextPost* textPost);
 
 #endif
