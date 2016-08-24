@@ -1,9 +1,6 @@
-#ifndef _PALMR_H_
-#define _PALMR_H_
+#ifndef _POSTLIST_H_
+#define _POSTLIST_H_
 
-#include "PalmrDB.h"
-#include "PalmrRsc.h"
-// #include "PostList.h"
 #include <System/SystemPublic.h>
 #include <UI/UIPublic.h>
 

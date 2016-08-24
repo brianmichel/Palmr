@@ -22,7 +22,7 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
     printf("I'm launching from PilotMain!");
 
-    FrmGotoForm(PalmrForm);
+    FrmGotoForm(PostListForm);
 
     setup_database();
 

@@ -34,3 +34,12 @@ BEGIN
     MENUITEM "About"	       PalmrMainMenuAbout
   END
 END
+
+FORM ID PostListForm AT (0 0 160 160)
+USABLE
+NOFRAME
+MENUID PalmrMainMenuBar
+BEGIN
+  TITLE "It's your posts!"
+  TABLE PostListTable AT (0 0 160 160) ROWS PostListRows COLUMNS PostListColumns COLUMNWIDTHS 10 30 120
+END
