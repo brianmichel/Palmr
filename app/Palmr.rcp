@@ -25,6 +25,14 @@ BEGIN
   BUTTONS "OK"
 END
 
+ALERT ID PrintfAlert
+INFORMATION
+begin
+  title "Printf"
+  message "^1^2^3"
+  buttons "Ok"
+end
+
 MENU ID PalmrMainMenuBar
 BEGIN
   PULLDOWN "File"
