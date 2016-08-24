@@ -23,6 +23,7 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
         return 0;
     }
 
+    setup_database();
     FrmGotoForm(PalmrForm);
 
     do {
@@ -40,7 +41,7 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
     FrmCloseAllForms();
 
     if (PalmrDatabase != NULL) {
-        destroy_database_reference(PalmrDatabase);
+        destroy_database_reference(&PalmrDatabase);
         PalmrDatabase = NULL;
     }
 
@@ -85,11 +86,9 @@ static Boolean PalmrFormEventHandler(EventPtr event)
             FrmCustomAlert(TheError,
                 "Oops, looks like our connection goofed here, try again?",
                 NULL, NULL);
-            setup_database();
             return true;
         }
         case PalmrMainMenuAbout: {
-            setup_database();
             FrmAlert(AboutAlert);
             return true;
         }

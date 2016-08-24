@@ -54,6 +54,8 @@ Boolean initialize_database_reference(DmOpenRef* database)
 
     *database = db;
 
+    AlertPrintf1("There's a database open!");
+
     return true;
 }
 
