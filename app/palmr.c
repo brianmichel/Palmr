@@ -3,7 +3,7 @@
 
 static DmOpenRef PalmrDatabase;
 
-static Boolean PalmrFormEventHandler(EventPtr event);
+// static Boolean PalmrFormEventHandler(EventPtr event);
 static Boolean MyOverallEventHandler(EventPtr event);
 
 Boolean setup_database(void);
@@ -23,8 +23,9 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
         return 0;
     }
 
-    setup_database();
-    FrmGotoForm(PalmrForm);
+    FrmGotoForm(PostListForm);
+
+    // setup_database();
 
     do {
         EvtGetEvent(&event, evtWaitForever);
@@ -54,7 +55,7 @@ static Boolean MyOverallEventHandler(EventPtr event)
     case frmLoadEvent: {
         FormPtr pForm = FrmInitForm(event->data.frmLoad.formID);
         FrmSetActiveForm(pForm);
-        FrmSetEventHandler(pForm, PalmrFormEventHandler);
+        FrmSetEventHandler(pForm, PostListFormEventHandler);
         return true;
     }
     case menuEvent: {
@@ -65,40 +66,41 @@ static Boolean MyOverallEventHandler(EventPtr event)
     return false;
 }
 
-static Boolean PalmrFormEventHandler(EventPtr event)
-{
-    static FormPtr gpForm;
-
-    switch (event->eType) {
-    case frmOpenEvent: {
-        FrmDrawForm(gpForm = FrmGetActiveForm());
-
-        return true;
-    }
-    case frmCloseEvent: {
-        FrmEraseForm(gpForm);
-        FrmDeleteForm(gpForm);
-        return true;
-    }
-    case ctlSelectEvent: {
-        switch (event->data.ctlSelect.controlID) {
-        case HelpButton: {
-            FrmCustomAlert(TheError,
-                "Oops, looks like our connection goofed here, try again?",
-                NULL, NULL);
-            return true;
-        }
-        case PalmrMainMenuAbout: {
-            FrmAlert(AboutAlert);
-            return true;
-        }
-        }
-    }
-    default: {
-        return false;
-    }
-    }
-}
+// static Boolean PalmrFormEventHandler(EventPtr event)
+// {
+//     static FormPtr gpForm;
+//
+//     switch (event->eType) {
+//     case frmOpenEvent: {
+//         FrmDrawForm(gpForm = FrmGetActiveForm());
+//         UpdatePostsTable(gpForm);
+//
+//         return true;
+//     }
+//     case frmCloseEvent: {
+//         FrmEraseForm(gpForm);
+//         FrmDeleteForm(gpForm);
+//         return true;
+//     }
+//     case ctlSelectEvent: {
+//         switch (event->data.ctlSelect.controlID) {
+//         case HelpButton: {
+//             FrmCustomAlert(TheError,
+//                 "Oops, looks like our connection goofed here, try again?",
+//                 NULL, NULL);
+//             return true;
+//         }
+//         case PalmrMainMenuAbout: {
+//             FrmAlert(AboutAlert);
+//             return true;
+//         }
+//         }
+//     }
+//     default: {
+//         return false;
+//     }
+//     }
+// }
 
 Boolean setup_database(void)
 {
