@@ -5,7 +5,7 @@
 void UpdatePostsTable(FormPtr pForm)
 {
   FormPtr		frm = FrmGetFormPtr(pForm);
-  UInt16		obj = FrmGetObjectIndex(frm, Table);
+  UInt16		obj = FrmGetObjectIndex(frm, PostListTable);
   TablePtr	table = (TablePtr)FrmGetObjectPtr(frm, obj);
   char		*strings[PostListRows] = {"Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Fuck", "Piss"};
   register	i;
@@ -30,4 +30,4 @@ void UpdatePostsTable(FormPtr pForm)
   //	TblRedrawTable(table);
   //	FrmUpdateForm (Table, 0);
   TblRedrawTable(table);
-};
+}
