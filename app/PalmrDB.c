@@ -1,6 +1,8 @@
 #include <System/SystemPublic.h>
+#include <stdio.h>
 
 #include "PalmrDB.h"
+#include "Util.h"
 
 #define PalmrDBType 'DATA'
 #define PalmrDBCreator 'TBLR'
@@ -14,16 +16,16 @@ Boolean initialize_database_reference(DmOpenRef* database)
     DmOpenRef db;
 
     LocalID databaseID;
-    UInt16 cardNumber;
+    UInt16 cardNumber = 0;
     UInt16 databaseAttributes;
     UInt16 databaseAttributesWithBackup;
 
     db = DmOpenDatabaseByTypeCreator(PalmrDBType, PalmrDBCreator, dmModeReadWrite);
     // Database doesn't exist, let's create it
-    if (!db) {
-        error = DmCreateDatabase(0, "Palmr", PalmrDBCreator, PalmrDBType, false);
+    if (db == NULL) {
+        error = DmCreateDatabase(0, "PalmrPosts", PalmrDBCreator, PalmrDBType, false);
         if (error) {
-            printf("Unable to create database for Palmr application! %i\n", error);
+            AlertPrintf1("Unable to create database for Palmr application!");
             return false;
         }
 
@@ -32,20 +34,20 @@ Boolean initialize_database_reference(DmOpenRef* database)
 
     error = DmOpenDatabaseInfo(db, &databaseID, NULL, NULL, &cardNumber, NULL);
     if (error) {
-        printf("Unable to get database information from Palmr DB!\n");
+        AlertPrintf1("Unable to get database information from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
 
     if (get_database_attributes(databaseID, &databaseAttributes) != NULL) {
-        printf("Unable to get database attributes from Palmr DB!\n");
+        AlertPrintf1("Unable to get database attributes from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
 
     databaseAttributesWithBackup = databaseAttributes | dmHdrAttrBackup;
     if (set_database_attributes(databaseID, &databaseAttributesWithBackup) != NULL) {
-        printf("Unable to set database attributes from Palmr DB!\n");
+        AlertPrintf1("Unable to set database attributes from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
@@ -106,6 +108,7 @@ Boolean destroy_database_reference(DmOpenRef* database)
         Err error;
         error = DmCloseDatabase(*database);
         if (error) {
+            printf("Error trying to close database %i\n", error);
             return false;
         }
         return true;

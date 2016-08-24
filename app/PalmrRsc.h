@@ -14,6 +14,7 @@
 // Alerts
 #define AboutAlert 2000
 #define TheError 3000
+#define PrintfAlert 4000
 
 #define PalmrMainMenuBar 1001
 #define PalmrMainMenuPreferences 1010

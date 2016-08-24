@@ -38,5 +38,5 @@ $(PROGNAME): $(OBJS)
 	$(XCC) $(XCFLAGS) $(OBJS) -o $(PROGNAME)
 
 # Build the main app .o from the source files.
-$(PROGNAME).o: PalmrDB.h PalmrDB.c palmr.h palmr.c
+$(PROGNAME).o: PalmrDB.h PalmrDB.c palmr.h palmr.c Util.h
 	$(XCC) $(XCFLAGS) -c PalmrDB.c palmr.c

@@ -1,4 +1,5 @@
 #include "palmr.h"
+#include "Util.h"
 
 static DmOpenRef PalmrDatabase;
 
@@ -22,8 +23,6 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
         return 0;
     }
 
-    printf("I'm launching from PilotMain!");
-
     FrmGotoForm(PalmrForm);
 
     do {
@@ -41,7 +40,7 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
     FrmCloseAllForms();
 
     if (PalmrDatabase != NULL) {
-        free(PalmrDatabase);
+        destroy_database_reference(PalmrDatabase);
         PalmrDatabase = NULL;
     }
 
