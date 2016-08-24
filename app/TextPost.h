@@ -9,8 +9,8 @@ static const int TextPostBodyMax = 100;
 
 typedef struct TextPost {
     PostType type;
-    char* author;
-    char* body;
+    Char* author;
+    Char* body;
 } TextPost;
 
 Boolean initialize_text_post(TextPost* textPost);

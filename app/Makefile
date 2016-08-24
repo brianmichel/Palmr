@@ -15,7 +15,7 @@ OBJS = palmr.o PalmrDB.o TextPost.o
 PILRCSRC = $(PROGNAME).rcp
 ICONBMP = $(PROGNAME).pbitm
 
-ICONTEXT = "Palmr"
+ICONTEXT = "Tumblr"
 APPID = TBLR
 
 all: $(PROGNAME).prc
