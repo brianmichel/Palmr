@@ -1,5 +1,6 @@
 #include "PostList.h"
 #include "PalmrDB.h"
+#include "Util.h"
 
 // static Boolean PostListTableHandler(EventPtr event);
 
@@ -76,6 +77,20 @@ Boolean PostListFormEventHandler(EventPtr event)
             return true;
         }
         }
+    }
+    case tblSelectEvent: {
+      int row = event->data.tblSelect.row;
+      int column = event->data.tblSelect.column;
+      char strRow[15];
+      char strColumn[15];
+
+      sprintf(strRow, "%i", row);
+      sprintf(strColumn, "%i", column);
+
+      AlertPrintf3(
+          "You selected:",
+          strRow, strColumn);
+      return true;
     }
     default: {
         return false;
