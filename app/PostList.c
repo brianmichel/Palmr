@@ -4,7 +4,7 @@
 
 // static Boolean PostListTableHandler(EventPtr event);
 
-void UpdatePostsTable(FormPtr pForm)
+void UpdatePostsTable(FormPtr pForm, int maxRows)
 {
   UInt16		obj = FrmGetObjectIndex(pForm, PostListTable);
   TablePtr	table = (TablePtr)FrmGetObjectPtr(pForm, obj);
@@ -23,7 +23,7 @@ void UpdatePostsTable(FormPtr pForm)
                                           "Testing 1 2 3"};
   register	i;
 
-  for (i = 0; i < PostListRows; i++)
+  for (i = 0; i < maxRows; i++)
   {
     TblSetItemStyle (table, i, 0, labelTableItem);
     TblSetItemStyle (table, i, 1, labelTableItem);
@@ -50,12 +50,14 @@ void UpdatePostsTable(FormPtr pForm)
 Boolean PostListFormEventHandler(EventPtr event)
 {
     static FormPtr gpForm;
+    int postCount;
 
     switch (event->eType) {
     case frmOpenEvent: {
+        postCount = 8;
         setup_database();
         FrmDrawForm(gpForm = FrmGetActiveForm());
-        UpdatePostsTable(gpForm);
+        UpdatePostsTable(gpForm, postCount);
 
         return true;
     }

@@ -5,7 +5,7 @@
 
 #include "PalmrRsc.h"
 
-void UpdatePostsTable(FormPtr pForm);
+void UpdatePostsTable(FormPtr pForm, int maxRows);
 Boolean PostListFormEventHandler(EventPtr event);
 
 #endif
