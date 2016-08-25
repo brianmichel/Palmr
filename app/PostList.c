@@ -11,17 +11,17 @@ void UpdatePostsTable(FormPtr pForm, UInt16 numberOfRows)
     UInt16 obj = FrmGetObjectIndex(pForm, PostListTable);
     TablePtr table = (TablePtr)FrmGetObjectPtr(pForm, obj);
     char* icon[PostListMaxRows] = { "*", "*", "*", "*", "*", "*", "*", "*", "*", "*" };
-    char* userName[PostListMaxRows] = { "Chungo", "Scrungus", "Meeper", "Sreegs", "Brian", "Ken", "Ello", "I'm", "Oli", "Test" };
-    char* postPreview[PostListMaxRows] = { "Cut my life into pieces",
-        "This is my last resort",
-        "Wake me up inside",
-        "I can't wake up",
-        "Today I ate a piece of toast",
-        "The discourse...",
-        "Top ten things I love about squart",
-        "This is just sample data",
-        "If you're reading this the app is broke",
-        "Testing 1 2 3" };
+    char* userName[PostListMaxRows] = { "Sam", "Max", "Jess", "Polly", "Pete", "Ken", "Ello", "Brian", "Oli", "Test" };
+    char* postPreview[PostListMaxRows] = { "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview...",
+        "This is a post preview..." };
     register int i;
 
     if (numberOfRows > PostListMaxRows) {
