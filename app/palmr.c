@@ -28,8 +28,6 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
     FrmGotoForm(PostListForm);
 
-    // setup_database();
-
     do {
         EvtGetEvent(&event, evtWaitForever);
 
@@ -74,8 +72,13 @@ static Boolean MyOverallEventHandler(EventPtr event)
 
 static Boolean handle_file_menu(EventPtr event)
 {
+    int records = 0;
+    Char* alert = "";
+
     switch (event->data.menu.itemID) {
     case PalmrMainMenuAbout:
+        setup_database();
+
         AlertPrintf1("Tapped About!");
         return true;
     case PalmrMainMenuHelp:
@@ -84,14 +87,12 @@ static Boolean handle_file_menu(EventPtr event)
     case PamlrMainMenuTest: {
         create_test_records(&PalmrDatabase);
 
-        {
-            int records = number_of_references(&PalmrDatabase);
+        records = number_of_references(&PalmrDatabase);
 
-            Char* alert = "";
-            sprintf(alert, "Records available: %i", records);
+        sprintf(alert, "Records available: %i", records);
 
-            AlertPrintf1(alert);
-        }
+        AlertPrintf1(alert);
+
         return true;
     }
     default:

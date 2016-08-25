@@ -80,7 +80,7 @@ static UInt16 text_post_packed_size(TextPost* post)
 
     size += StrLen(post->author);
     size += StrLen(post->body);
-    size += sizeof(PostType);
+    size += StrLen(post_type_to_code(post->type));
 
     return size;
 }
