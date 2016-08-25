@@ -70,7 +70,7 @@ static Boolean MyOverallEventHandler(EventPtr event)
         }
     }
     case menuEvent: {
-        return true;
+        return handle_menu_event(event);
     }
     default:
         return false;
@@ -127,4 +127,21 @@ Boolean setup_database(void)
     }
 
     return true;
+}
+
+Boolean handle_menu_event(EventPtr event)
+{
+    Boolean handled = false;
+
+    switch (event->data.menu.itemID) {
+    case PalmrMainMenuHelp:
+        FrmCustomAlert(TheError, "There is no help to be offered to you.", NULL, NULL);
+        handled = true;
+        break;
+    case PalmrMainMenuAbout:
+        FrmCustomAlert(AboutAlert, NULL, NULL, NULL);
+        handled = true;
+        break;
+    }
+    return handled;
 }

@@ -12,8 +12,8 @@ END
 ALERT ID AboutAlert
 INFORMATION
 BEGIN
-  TITLE "About Palmr"
-  MESSAGE "A simple application for viewing the latest web downloadables from Tumblr.com"
+  TITLE "About Tumblr"
+  MESSAGE "A simple application for viewing the latest web downloadables from Tumblr.com made by Ken & Brian in 2016 A.D."
   BUTTONS "OK"
 END
 
