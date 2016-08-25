@@ -16,4 +16,8 @@ typedef struct TextPost {
 Boolean initialize_text_post(TextPost* textPost);
 Boolean destroy_text_post(TextPost* textPost);
 
+void create_test_records(DmOpenRef* database);
+
+void write_text_post_record(DmOpenRef* database, TextPost* post, UInt16* index);
+
 #endif

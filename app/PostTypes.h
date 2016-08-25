@@ -11,25 +11,25 @@ typedef enum PostType {
     PostTypeAudio
 } PostType;
 
-static char* post_type_to_string(PostType type)
+static char* post_type_to_code(PostType type)
 {
     switch (type) {
     default:
     // Intentional Fallthrough
     case PostTypeUnknown:
-        return "Unknown";
+        return "Un";
     case PostTypeText:
-        return "Text";
+        return "Te";
     case PostTypePhoto:
-        return "Photo";
+        return "Ph";
     case PostTypeQuote:
-        return "Quote";
+        return "Qu";
     case PostTypeVideo:
-        return "Video";
+        return "Vi";
     case PostTypeChat:
-        return "Chat";
+        return "Ch";
     case PostTypeAudio:
-        return "Audio";
+        return "Au";
     }
 }
 
