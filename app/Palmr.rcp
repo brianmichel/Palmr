@@ -37,9 +37,8 @@ MENU ID PalmrMainMenuBar
 BEGIN
   PULLDOWN "File"
   BEGIN
-    MENUITEM "Preferences"   PalmrMainMenuPreferences
-    MENUITEM "Help"		       PalmrMainMenuHelp
-    MENUITEM "About"	       PalmrMainMenuAbout
+    MENUITEM "Help" ID PalmrMainMenuHelp "H"
+    MENUITEM "About" ID PalmrMainMenuAbout "A"
   END
 END
 

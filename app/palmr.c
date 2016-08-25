@@ -59,11 +59,27 @@ static Boolean MyOverallEventHandler(EventPtr event)
         return true;
     }
     case menuEvent: {
-        return true;
+        return handle_file_menu(event);
     }
     default: {
         return false;
     }
+    }
+
+    return false;
+}
+
+static Boolean handle_file_menu(EventPtr event)
+{
+    switch (event->data.menu.itemID) {
+    case PalmrMainMenuAbout:
+        AlertPrintf1("Tapped About!");
+        return true;
+    case PalmrMainMenuHelp:
+        AlertPrintf1("Tapped Help!");
+        return true;
+    default:
+        return false;
     }
 
     return false;

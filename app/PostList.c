@@ -90,6 +90,10 @@ Boolean PostListFormEventHandler(EventPtr event)
             strRow, strColumn);
         return true;
     }
+    case menuEvent: {
+        AlertPrintf1("A menu event happened");
+        return true;
+    }
     default: {
         return false;
     }
