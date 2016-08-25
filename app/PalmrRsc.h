@@ -34,5 +34,5 @@
 #define PostViewForm 5000
 #define PostViewFormBar 5001
 #define PostAuthorLabel 5002
-#define PostBodyLabel   5003
+#define PostBodyField   5003
 #define BackToPostListEvent 5005
