@@ -1,9 +1,12 @@
 #include "palmr.h"
+#include "Util.h"
 
-static PalmrDBRef database;
+static DmOpenRef PalmrDatabase;
 
-static Boolean PalmrFormEventHandler(EventPtr event);
+// static Boolean PalmrFormEventHandler(EventPtr event);
 static Boolean MyOverallEventHandler(EventPtr event);
+
+Boolean setup_database(void);
 /**
  * Main entry point for all PalmOS application.
  * @param  launchCode  Where did the launch come from?
@@ -20,11 +23,9 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
         return 0;
     }
 
-    printf("I'm launching from PilotMain!");
+    FrmGotoForm(PostListForm);
 
-    FrmGotoForm(PalmrForm);
-
-    setup_database();
+    // setup_database();
 
     do {
         EvtGetEvent(&event, evtWaitForever);
@@ -40,9 +41,9 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
     FrmCloseAllForms();
 
-    if (database != NULL) {
-        free(database);
-        database = NULL;
+    if (PalmrDatabase != NULL) {
+        destroy_database_reference(&PalmrDatabase);
+        PalmrDatabase = NULL;
     }
 
     return 0;
@@ -54,7 +55,7 @@ static Boolean MyOverallEventHandler(EventPtr event)
     case frmLoadEvent: {
         FormPtr pForm = FrmInitForm(event->data.frmLoad.formID);
         FrmSetActiveForm(pForm);
-        FrmSetEventHandler(pForm, PalmrFormEventHandler);
+        FrmSetEventHandler(pForm, PostListFormEventHandler);
         return true;
     }
     case menuEvent: {
@@ -65,50 +66,49 @@ static Boolean MyOverallEventHandler(EventPtr event)
     return false;
 }
 
-static Boolean PalmrFormEventHandler(EventPtr event)
-{
-    static FormPtr gpForm;
-
-    switch (event->eType) {
-    case frmOpenEvent: {
-        FrmDrawForm(gpForm = FrmGetActiveForm());
-
-        return true;
-    }
-    case frmCloseEvent: {
-        FrmEraseForm(gpForm);
-        FrmDeleteForm(gpForm);
-        return true;
-    }
-    case ctlSelectEvent: {
-        switch (event->data.ctlSelect.controlID) {
-        case HelpButton: {
-            FrmCustomAlert(TheError,
-                "Oops, looks like our connection goofed here, try again?",
-                NULL, NULL);
-            return true;
-        }
-        }
-    }
-    case menuEvent: {
-        switch (event->data.menu.itemID) {
-        case PalmrMainMenuAbout: {
-            FrmAlert(AboutAlert);
-            return true;
-        }
-        }
-    }
-    default: {
-        return false;
-    }
-    }
-}
+// static Boolean PalmrFormEventHandler(EventPtr event)
+// {
+//     static FormPtr gpForm;
+//
+//     switch (event->eType) {
+//     case frmOpenEvent: {
+//         FrmDrawForm(gpForm = FrmGetActiveForm());
+//         UpdatePostsTable(gpForm);
+//
+//         return true;
+//     }
+//     case frmCloseEvent: {
+//         FrmEraseForm(gpForm);
+//         FrmDeleteForm(gpForm);
+//         return true;
+//     }
+//     case ctlSelectEvent: {
+//         switch (event->data.ctlSelect.controlID) {
+//         case HelpButton: {
+//             FrmCustomAlert(TheError,
+//                 "Oops, looks like our connection goofed here, try again?",
+//                 NULL, NULL);
+//             return true;
+//         }
+//         case PalmrMainMenuAbout: {
+//             FrmAlert(AboutAlert);
+//             return true;
+//         }
+//         }
+//     }
+//     default: {
+//         return false;
+//     }
+//     }
+// }
 
 Boolean setup_database(void)
 {
-    if (database == NULL) {
-        database = malloc(sizeof(PalmrDB));
-        if (!initialize_database_reference(database)) {
+    if (PalmrDatabase == NULL) {
+        if (!initialize_database_reference(&PalmrDatabase)) {
+            FrmCustomAlert(TheError,
+                "Unable to setup the database :(",
+                NULL, NULL);
             return false;
         }
     }

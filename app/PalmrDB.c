@@ -1,6 +1,8 @@
 #include <System/SystemPublic.h>
+#include <stdio.h>
 
 #include "PalmrDB.h"
+#include "Util.h"
 
 #define PalmrDBType 'DATA'
 #define PalmrDBCreator 'TBLR'
@@ -8,21 +10,22 @@
 static Err get_database_attributes(LocalID databaseID, UInt16* attributes);
 static Err set_database_attributes(LocalID databaseID, UInt16* attributes);
 
-Boolean initialize_database_reference(PalmrDBRef database)
+Boolean initialize_database_reference(DmOpenRef* database)
 {
     Err error;
     DmOpenRef db;
 
     LocalID databaseID;
-    UInt16 cardNumber;
+    UInt16 cardNumber = 0;
     UInt16 databaseAttributes;
     UInt16 databaseAttributesWithBackup;
 
     db = DmOpenDatabaseByTypeCreator(PalmrDBType, PalmrDBCreator, dmModeReadWrite);
     // Database doesn't exist, let's create it
-    if (!db) {
-        error = DmCreateDatabase(0, "Palmr", PalmrDBCreator, PalmrDBType, false);
+    if (db == NULL) {
+        error = DmCreateDatabase(0, "PalmrPosts", PalmrDBCreator, PalmrDBType, false);
         if (error) {
+            AlertPrintf1("Unable to create database for Palmr application!");
             return false;
         }
 
@@ -31,23 +34,27 @@ Boolean initialize_database_reference(PalmrDBRef database)
 
     error = DmOpenDatabaseInfo(db, &databaseID, NULL, NULL, &cardNumber, NULL);
     if (error) {
+        AlertPrintf1("Unable to get database information from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
 
     if (get_database_attributes(databaseID, &databaseAttributes) != NULL) {
+        AlertPrintf1("Unable to get database attributes from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
 
     databaseAttributesWithBackup = databaseAttributes | dmHdrAttrBackup;
     if (set_database_attributes(databaseID, &databaseAttributesWithBackup) != NULL) {
+        AlertPrintf1("Unable to set database attributes from Palmr DB!");
         DmCloseDatabase(db);
         return false;
     }
 
-    database->databaseReference = db;
-    database->opened = true;
+    *database = db;
+
+    AlertPrintf1("There's a database open!");
 
     return true;
 }
@@ -92,17 +99,18 @@ static Err set_database_attributes(LocalID databaseID, UInt16* attributes)
     return error;
 }
 
-UInt16 number_of_references(PalmrDBRef database)
+UInt16 number_of_references(DmOpenRef* database)
 {
-    return DmNumRecords(database->databaseReference);
+    return DmNumRecords(*database);
 }
 
-Boolean destroy_database_reference(PalmrDBRef database)
+Boolean destroy_database_reference(DmOpenRef* database)
 {
-    if (database && database->opened) {
+    if (database) {
         Err error;
-        error = DmCloseDatabase(database->databaseReference);
+        error = DmCloseDatabase(*database);
         if (error) {
+            printf("Error trying to close database %i\n", error);
             return false;
         }
         return true;

@@ -25,6 +25,14 @@ BEGIN
   BUTTONS "OK"
 END
 
+ALERT ID PrintfAlert
+INFORMATION
+begin
+  title "Printf"
+  message "^1^2^3"
+  buttons "Ok"
+end
+
 MENU ID PalmrMainMenuBar
 BEGIN
   PULLDOWN "File"
@@ -33,6 +41,15 @@ BEGIN
     MENUITEM "Help"		       PalmrMainMenuHelp
     MENUITEM "About"	       PalmrMainMenuAbout
   END
+END
+
+FORM ID PostListForm AT (0 0 160 160)
+USABLE
+NOFRAME
+MENUID PalmrMainMenuBar
+BEGIN
+  TITLE "It's your posts!"
+  TABLE PostListTable AT (0 15 160 140) ROWS PostListRows COLUMNS PostListColumns COLUMNWIDTHS 10 30 120
 END
 
 ICON "tumblr.bmp"

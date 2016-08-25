@@ -39,3 +39,6 @@ app/palmer
 # Debug files
 *.dSYM/
 *.su
+
+# Binaries
+app/palmr

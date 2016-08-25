@@ -10,12 +10,12 @@ OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
 
 PROGNAME = palmr
-OBJS = palmr.o PalmrDB.o
+OBJS = palmr.o PalmrDB.o TextPost.o PostList.o
 
 PILRCSRC = $(PROGNAME).rcp
 ICONBMP = $(PROGNAME).pbitm
 
-ICONTEXT = "Palmr"
+ICONTEXT = "Tumblr"
 APPID = TBLR
 
 all: $(PROGNAME).prc
@@ -38,5 +38,5 @@ $(PROGNAME): $(OBJS)
 	$(XCC) $(XCFLAGS) $(OBJS) -o $(PROGNAME)
 
 # Build the main app .o from the source files.
-$(PROGNAME).o: PalmrDB.h PalmrDB.c palmr.h palmr.c
-	$(XCC) $(XCFLAGS) -c PalmrDB.c palmr.c
+$(PROGNAME).o: PalmrDB.h PalmrDB.c palmr.h palmr.c Util.h PostList.h PostList.c TextPost.h TextPost.c PostTypes.h
+	$(XCC) $(XCFLAGS) -c PalmrDB.c palmr.c PostList.c TextPost.c
