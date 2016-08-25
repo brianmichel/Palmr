@@ -37,18 +37,24 @@ MENU ID PalmrMainMenuBar
 BEGIN
   PULLDOWN "File"
   BEGIN
-    MENUITEM "Preferences"   PalmrMainMenuPreferences
-    MENUITEM "Help"		       PalmrMainMenuHelp
-    MENUITEM "About"	       PalmrMainMenuAbout
+    MENUITEM "Help"		       ID PalmrMainMenuHelp "H"
+    MENUITEM "About"	       ID PalmrMainMenuAbout "A"
+  END
+  PULLDOWN "View"
+  BEGIN
+    MENUITEM "Explore" ID PalmrViewMenuExplore "E"
+    MENUITEM "Messaging" ID PalmrViewMenuMessaging "M"
+    MENUITEM "Profile" ID PalmrViewMenuProfile "U"
   END
 END
+
 
 FORM ID PostListForm AT (0 0 160 160)
 USABLE
 NOFRAME
 MENUID PalmrMainMenuBar
 BEGIN
-  TITLE "It's your posts!"
+  TITLE "Dashboard"
   TABLE PostListTable AT (0 15 160 140) ROWS PostListMaxRows COLUMNS PostListColumns COLUMNWIDTHS 10 30 120
 END
 

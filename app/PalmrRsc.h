@@ -21,6 +21,11 @@
 #define PalmrMainMenuHelp 1011
 #define PalmrMainMenuAbout 1012
 
+#define PalmrViewMenu 1100
+#define PalmrViewMenuExplore 1101
+#define PalmrViewMenuMessaging 1102
+#define PalmrViewMenuProfile 1103
+
 #define PostListForm 4000
 #define PostListTable 4001
 #define PostListColumns 3
