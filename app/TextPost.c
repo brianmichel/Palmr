@@ -9,6 +9,15 @@ Boolean initialize_text_post(TextPost* textPost)
     return true;
 }
 
+Boolean initialize_text_post_full(TextPost* textPost, Char* author, Char* body)
+{
+    textPost->type = PostTypeText;
+    textPost->author = author;
+    textPost->body = body;
+
+    return true;
+}
+
 Boolean destroy_text_post(TextPost* textPost)
 {
     //TODO dynamically deallocate strings

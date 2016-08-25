@@ -16,4 +16,6 @@ typedef struct TextPost {
 Boolean initialize_text_post(TextPost* textPost);
 Boolean destroy_text_post(TextPost* textPost);
 
+Boolean initialize_text_post_full(TextPost* textPost, Char* author, Char* body);
+
 #endif

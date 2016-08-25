@@ -56,22 +56,24 @@ static Boolean MyOverallEventHandler(EventPtr event)
 
     switch (event->eType) {
     case frmLoadEvent: {
-      formId = event->data.frmLoad.formID;
-  		form = FrmInitForm(formId);
-  		FrmSetActiveForm(form);
+        formId = event->data.frmLoad.formID;
+        form = FrmInitForm(formId);
+        FrmSetActiveForm(form);
 
-      switch (formId) {
+        switch (formId) {
         case PostListForm:
-          FrmSetEventHandler(form, PostListFormEventHandler);
-          return true;
+            FrmSetEventHandler(form, PostListFormEventHandler);
+            return true;
         case PostViewForm:
-          FrmSetEventHandler(form, PostViewEventHandler);
-          return true;
-      }
+            FrmSetEventHandler(form, PostViewEventHandler);
+            return true;
+        }
     }
     case menuEvent: {
         return true;
     }
+    default:
+        return false;
     }
 
     return false;
