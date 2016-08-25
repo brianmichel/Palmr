@@ -61,6 +61,9 @@ static Boolean MyOverallEventHandler(EventPtr event)
     case menuEvent: {
         return true;
     }
+    default: {
+        return false;
+    }
     }
 
     return false;
