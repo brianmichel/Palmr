@@ -4,14 +4,14 @@
 
 // static Boolean PostListTableHandler(EventPtr event);
 
-void UpdatePostsTable(FormPtr pForm)
+void UpdatePostsTable(FormPtr pForm, UInt16 numberOfRows)
 {
+  UInt16 rowsToDraw;
   UInt16		obj = FrmGetObjectIndex(pForm, PostListTable);
   TablePtr	table = (TablePtr)FrmGetObjectPtr(pForm, obj);
-  // char		*strings[PostListRows] = {"Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Fuck", "Piss"};
-  char    *icon[PostListRows] = {"*", "*", "*", "*", "*", "*", "*", "*", "*", "*"};
-  char    *userName[PostListRows] = { "Chungo", "Scrungus", "Meeper", "Sreegs", "Brian", "Ken", "Ello", "I'm", "Oli", "Test"};
-  char    *postPreview[PostListRows] = {  "Cut my life into pieces",
+  char    *icon[PostListMaxRows] = {"*", "*", "*", "*", "*", "*", "*", "*", "*", "*"};
+  char    *userName[PostListMaxRows] = { "Chungo", "Scrungus", "Meeper", "Sreegs", "Brian", "Ken", "Ello", "I'm", "Oli", "Test"};
+  char    *postPreview[PostListMaxRows] = {  "Cut my life into pieces",
                                           "This is my last resort",
                                           "Wake me up inside",
                                           "I can't wake up",
@@ -23,7 +23,16 @@ void UpdatePostsTable(FormPtr pForm)
                                           "Testing 1 2 3"};
   register	i;
 
-  for (i = 0; i < PostListRows; i++)
+  if (numberOfRows > PostListMaxRows) {
+    AlertPrintf3(
+        "Number of posts exceeded the limit. Reducing to 10.",
+        NULL, NULL);
+    rowsToDraw = PostListMaxRows;
+  } else {
+    rowsToDraw = numberOfRows;
+  }
+
+  for (i = 0; i < rowsToDraw; i++)
   {
     TblSetItemStyle (table, i, 0, labelTableItem);
     TblSetItemStyle (table, i, 1, labelTableItem);
@@ -50,12 +59,14 @@ void UpdatePostsTable(FormPtr pForm)
 Boolean PostListFormEventHandler(EventPtr event)
 {
     static FormPtr gpForm;
+    UInt16 postCount;
 
     switch (event->eType) {
     case frmOpenEvent: {
+        postCount = 11;
         setup_database();
         FrmDrawForm(gpForm = FrmGetActiveForm());
-        UpdatePostsTable(gpForm);
+        UpdatePostsTable(gpForm, postCount);
 
         return true;
     }

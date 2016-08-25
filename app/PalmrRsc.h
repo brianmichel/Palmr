@@ -24,4 +24,4 @@
 #define PostListForm 4000
 #define PostListTable 4001
 #define PostListColumns 3
-#define PostListRows 10
+#define PostListMaxRows 10
