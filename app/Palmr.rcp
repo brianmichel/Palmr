@@ -60,6 +60,10 @@ END
 
 MENU ID PostViewFormBar
 BEGIN
+  PULLDOWN "Nav"
+  BEGIN
+    MENUITEM "Go Back"         BackToPostListEvent
+  END
 END
 
 FORM ID PostViewForm AT (0 0 160 160)
