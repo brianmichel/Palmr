@@ -24,7 +24,7 @@ Boolean destroy_text_post(TextPost* textPost)
 void create_test_records(DmOpenRef* database)
 {
     int i = 0;
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 2; i++) {
         Char* author = "";
         TextPost post;
         UInt16 index;
@@ -65,7 +65,7 @@ void pack_text_post(TextPost* post, MemPtr recordP)
 
     // Write Type To Record
     DmWrite(recordP, offset, postCode, StrLen(postCode));
-    offset += sizeof(PostType);
+    offset += StrLen(postCode);
 
     // Write Author To Record
     DmWrite(recordP, offset, post->author, authorLength);
