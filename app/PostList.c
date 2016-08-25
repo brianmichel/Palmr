@@ -4,9 +4,9 @@
 
 // static Boolean PostListTableHandler(EventPtr event);
 
-void UpdatePostsTable(FormPtr pForm, int numberOfRows)
+void UpdatePostsTable(FormPtr pForm, UInt16 numberOfRows)
 {
-  int rowsToDraw;
+  UInt16 rowsToDraw;
   UInt16		obj = FrmGetObjectIndex(pForm, PostListTable);
   TablePtr	table = (TablePtr)FrmGetObjectPtr(pForm, obj);
   char    *icon[PostListMaxRows] = {"*", "*", "*", "*", "*", "*", "*", "*", "*", "*"};
@@ -59,7 +59,7 @@ void UpdatePostsTable(FormPtr pForm, int numberOfRows)
 Boolean PostListFormEventHandler(EventPtr event)
 {
     static FormPtr gpForm;
-    int postCount;
+    UInt16 postCount;
 
     switch (event->eType) {
     case frmOpenEvent: {
