@@ -6,6 +6,9 @@ void UpdatePostView(FormPtr pForm)
 {
   // UInt16 authorLabel = FrmGetObjectIndex(pForm, PostAuthorLabel);
   UInt16 bodyField   = FrmGetObjectIndex(pForm, PostBodyField);
+  // UInt16 fldPtr = (FieldType)FldGetTextPtr(bodyField);
+  UInt16 fldPtr = FrmGetObjectPtr(pForm, bodyField);
+  UInt16 fldTextPtr = FldGetTextPtr(fldPtr);
   char* testAuthor = "Scrungus";
   char* testBody = "test.";
 
@@ -13,8 +16,8 @@ void UpdatePostView(FormPtr pForm)
   FrmCopyLabel(pForm, PostAuthorLabel, testAuthor);
 
   // FldSetUsable(bodyField, false);
-  // FldSetTextPtr(bodyField, testBody);
-  // FldDrawField(bodyField);
+  FldSetTextPtr(fldTextPtr, testBody);
+  FldDrawField(fldPtr);
 
     // TODO Set up single post view here. Get the active form. Get each object from form. Just like in UpdatePostsTable
 }

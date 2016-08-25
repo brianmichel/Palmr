@@ -63,7 +63,7 @@ Boolean PostListFormEventHandler(EventPtr event)
     switch (event->eType) {
     case frmOpenEvent: {
         postCount = 10; // If you exceed 10 you pop a warning and it gets trimmed.
-        setup_database();
+        // setup_database();
         FrmDrawForm(gpForm = FrmGetActiveForm());
         UpdatePostsTable(gpForm, postCount);
 
