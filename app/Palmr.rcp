@@ -34,3 +34,7 @@ BEGIN
     MENUITEM "About"	       PalmrMainMenuAbout
   END
 END
+
+ICON "tumblr.bmp"
+
+SMALLICON "tumblrsmall.bmp"
