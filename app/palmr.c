@@ -51,12 +51,23 @@ UInt32 PilotMain(UInt16 launchCode, MemPtr cmdPBP, UInt16 launchFlags)
 
 static Boolean MyOverallEventHandler(EventPtr event)
 {
+    FormPtr form;
+    UInt16 formId;
+
     switch (event->eType) {
     case frmLoadEvent: {
-        FormPtr pForm = FrmInitForm(event->data.frmLoad.formID);
-        FrmSetActiveForm(pForm);
-        FrmSetEventHandler(pForm, PostListFormEventHandler);
-        return true;
+      formId = event->data.frmLoad.formID;
+  		form = FrmInitForm(formId);
+  		FrmSetActiveForm(form);
+
+      switch (formId) {
+        case PostListForm:
+          FrmSetEventHandler(form, PostListFormEventHandler);
+          return true;
+        case PostViewForm:
+          FrmSetEventHandler(form, PostViewEventHandler);
+          return true;
+      }
     }
     case menuEvent: {
         return true;

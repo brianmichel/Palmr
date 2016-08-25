@@ -25,3 +25,6 @@
 #define PostListTable 4001
 #define PostListColumns 3
 #define PostListMaxRows 10
+
+#define PostViewForm 5000
+#define PostViewFormBar 5001

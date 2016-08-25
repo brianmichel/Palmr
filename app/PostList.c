@@ -1,4 +1,5 @@
 #include "PostList.h"
+#include "PostView.h"
 #include "PalmrDB.h"
 #include "Util.h"
 
@@ -63,7 +64,7 @@ Boolean PostListFormEventHandler(EventPtr event)
 
     switch (event->eType) {
     case frmOpenEvent: {
-        postCount = 11;
+        postCount = 10; // If you exceed 10 you pop a warning and it gets trimmed.
         setup_database();
         FrmDrawForm(gpForm = FrmGetActiveForm());
         UpdatePostsTable(gpForm, postCount);
@@ -92,15 +93,18 @@ Boolean PostListFormEventHandler(EventPtr event)
     case tblSelectEvent: {
       int row = event->data.tblSelect.row;
       int column = event->data.tblSelect.column;
-      char strRow[15];
-      char strColumn[15];
+      // char strRow[15];
+      // char strColumn[15];
+      //
+      // sprintf(strRow, "%i", row);
+      // sprintf(strColumn, "%i", column);
 
-      sprintf(strRow, "%i", row);
-      sprintf(strColumn, "%i", column);
+      // AlertPrintf3(
+      //     "You selected:",
+      //     strRow, strColumn);
 
-      AlertPrintf3(
-          "You selected:",
-          strRow, strColumn);
+      FrmGotoForm(PostViewForm);
+
       return true;
     }
     default: {
