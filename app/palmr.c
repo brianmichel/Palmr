@@ -1,10 +1,13 @@
 #include "palmr.h"
+#include "TextPost.h"
 #include "Util.h"
+#include <stdio.h>
 
 static DmOpenRef PalmrDatabase;
 
 // static Boolean PalmrFormEventHandler(EventPtr event);
 static Boolean MyOverallEventHandler(EventPtr event);
+static Boolean handle_file_menu(EventPtr event);
 
 Boolean setup_database(void);
 /**
@@ -78,6 +81,19 @@ static Boolean handle_file_menu(EventPtr event)
     case PalmrMainMenuHelp:
         AlertPrintf1("Tapped Help!");
         return true;
+    case PamlrMainMenuTest: {
+        create_test_records(&PalmrDatabase);
+
+        {
+            int records = number_of_references(&PalmrDatabase);
+
+            Char* alert = "";
+            sprintf(alert, "Records available: %i", records);
+
+            AlertPrintf1(alert);
+        }
+        return true;
+    }
     default:
         return false;
     }

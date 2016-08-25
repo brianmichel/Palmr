@@ -39,6 +39,7 @@ BEGIN
   BEGIN
     MENUITEM "Help" ID PalmrMainMenuHelp "H"
     MENUITEM "About" ID PalmrMainMenuAbout "A"
+    MENUITEM "Create Test" ID PamlrMainMenuTest "T"
   END
 END
 
